@@ -14,6 +14,6 @@ public class Player : MonoBehaviour
         
         
         transform.Translate(Vector3.right * h);
-        transform.Rotate(0, moveSpeed * v, 0);
+        transform.Translate(Vector3.forward * v);
     }
 }

@@ -919,7 +919,7 @@ TilemapRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 6766b21fefedc4806a659b98d1655c5a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -4870,7 +4870,7 @@ GameObject:
   - component: {fileID: 1416531685}
   - component: {fileID: 1416531684}
   m_Layer: 0
-  m_Name: Capsule
+  m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4889,6 +4889,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: {x: 10, y: 10}
+  pBullet: {fileID: 8414806613243669103, guid: b2a232390cd196df0b934683de6d5125, type: 3}
 --- !u!212 &1416531685
 SpriteRenderer:
   m_ObjectHideFlags: 0

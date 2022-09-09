@@ -3,33 +3,28 @@ using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using UnityEngine;
 
+// Movement code inspired by: https://www.youtube.com/watch?v=whzomFgjT50 
+
 public class PlayerController : MonoBehaviour
 {
-    public Vector2 speed = new Vector2(50, 50);
-    public GameObject pBullet;
-    public float bulletSpeed = 30.0f;
     protected float elapsedTime;
+    public Rigidbody2D rb;
+    public GameObject pBullet;
     public float shootRate = 0.5f;
+    public float bulletSpeed = 30.0f;
+    public float moveSpeed = 5f;
+    private Vector2 movement;
     
 
     public void Start ()
     {
         elapsedTime = shootRate; // First shot can fire (thanks Dimitri)
     }
-
     // Update is called once per frame
     void Update()
     {
-
-        // Basic movement
-        float inputX = Input.GetAxis("Horizontal");
-        float inputY = Input.GetAxis("Vertical");
-        
-        Vector3 move = new Vector3(speed.x * inputX, speed.y * inputY, 0);
-        
-        move *= Time.deltaTime;
-        
-        transform.Translate(move);
+        movement.x = Input.GetAxisRaw("Horizontal");
+        movement.y = Input.GetAxisRaw("Vertical");
         
         // Back to main menu on 'Escape' key press
         if (Input.GetKey(KeyCode.Escape))
@@ -53,5 +48,14 @@ public class PlayerController : MonoBehaviour
             }
         }
         elapsedTime += Time.deltaTime;
+    }
+
+    void FixedUpdate() 
+    {
+        rb.MovePosition(rb.position + 
+                        movement * 
+                        moveSpeed * 
+                        Time.fixedDeltaTime
+                    );
     }
 }

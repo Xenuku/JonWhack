@@ -3,7 +3,7 @@
 public class CameraFollow : MonoBehaviour
 {
     public Transform target;
-    [Range(1f,40f)] public float laziness = 10f;
+    [Range(1f,40f)] public float laziness = 1f;
     public bool lookAtTarget = true;
     public bool takeOffsetFromInitialPos = true;
     public Vector3 generalOffset;

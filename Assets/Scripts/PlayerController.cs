@@ -9,12 +9,9 @@ public class PlayerController : MonoBehaviour
 {
     protected float elapsedTime;
     public Rigidbody2D rb;
-    public GameObject pBullet;
     public float shootRate = 0.5f;
-    public float bulletSpeed = 30.0f;
     public float moveSpeed = 5f;
     private Vector2 movement;
-    
 
     public void Start ()
     {
@@ -31,23 +28,6 @@ public class PlayerController : MonoBehaviour
         {
             SceneManager.LoadScene("MainMenu");
         }
-        
-        // Shooting
-        if(Input.GetButton("Fire1")) 
-        {
-            if (elapsedTime >= shootRate) {
-                elapsedTime = 0.0f;
-                Vector3 mouseP = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                Vector2 direction = (Vector2)((mouseP - transform.position));
-                direction.Normalize ();
-                GameObject baseBullet = (GameObject)Instantiate (
-                                    pBullet,
-                                    transform.position + (Vector3)(direction * 0.5f),
-                                    Quaternion.identity);
-                baseBullet.GetComponent<Rigidbody2D>().velocity = direction * 30.0f;
-            }
-        }
-        elapsedTime += Time.deltaTime;
     }
 
     void FixedUpdate() 
@@ -57,5 +37,6 @@ public class PlayerController : MonoBehaviour
                         moveSpeed * 
                         Time.fixedDeltaTime
                     );
+
     }
 }

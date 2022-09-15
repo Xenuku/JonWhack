@@ -16,11 +16,13 @@ public class AimWeapon : MonoBehaviour
     private void Awake()
     {
         aimTransform = transform.Find("Aim");
-        SetCursor(crosshair, mouseP);
+        Vector2 cursorPos = new Vector2(crosshair.width / 2, crosshair.height / 2);
+        //SetCursor(crosshair, mouseP);
+        Cursor.SetCursor(crosshair, cursorPos, CursorMode.Auto);
         
     }
     void SetCursor(Texture2D sprite, Vector2 center) {
-        Cursor.SetCursor(sprite, center, CursorMode.Auto);
+        //Cursor.SetCursor(sprite, center, CursorMode.Auto);
     }
 
     private void Update()

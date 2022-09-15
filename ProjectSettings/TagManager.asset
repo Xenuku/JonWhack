@@ -4,7 +4,7 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - melee_enemy
+  - Enemy
   layers:
   - Default
   - TransparentFX

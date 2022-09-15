@@ -5,7 +5,7 @@ using UnityEngine;
 public class Bullet : MonoBehaviour
 {
     public int damage = 10;
-    public float speed = 300.0f;
+    public float speed = 10.0f;
 
     public float lifeTime = 2.0f;
     private Vector2 newPos;
@@ -17,24 +17,19 @@ public class Bullet : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        newPos=transform.position +transform.forward*speed*Time.deltaTime;
-        RaycastHit hit;
-		if (Physics.Linecast(transform.position, newPos, out hit))
-        {
-            if (hit.collider)
-            {
-                transform.position=hit.point;
-                Destroy(gameObject);
-                GameObject obj=hit.collider.gameObject;
-                if(obj.tag=="enemy1"){
-                    MeleeEnemy enemy=(MeleeEnemy) obj.GetComponent(typeof(MeleeEnemy));
-                    enemy.ApplyDamage(damage);
-                    Debug.Log("Hit");
-                    
-                    }
-            }
-        }else{
-        transform.position=newPos;
+        newPos = transform.position + transform.forward * speed * Time.deltaTime;
+        transform.position = newPos;
+    }
+    private void OnCollisionEnter2D(Collision2D other) {
+        print("I hit something " + other.gameObject);
+        if (other.collider.gameObject.tag == "Enemy") {
+            print("Hit enemy");
+            Destroy(gameObject);
+            other.gameObject.SendMessage("ApplyDamage", damage);
+        } else {
+            // if it hits another obstacle, just destroy it
+            Destroy(gameObject);
         }
+        
     }
 }

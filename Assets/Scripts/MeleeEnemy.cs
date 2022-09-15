@@ -8,48 +8,34 @@ using UnityEngine.UI;
 
 public class MeleeEnemy : MonoBehaviour
 {
-    // Start is called before the first frame update
-
-
-  
     //this is for close attack enemy unit.
     public State curState;
-
-
     public GameObject Enemy;
-
-
-
     public float shootRate = 3.0f;
     protected float elapsedTime;
-
-
     protected bool bDead;
-    public int health = 100;
-
+    public int health = 10;
     // ranges
     public float attackRange = 5.0f;
     public float attackRangeStop = 2.5f;
-
     public int moving = 0;
-    //___________________________________________________
 
     private NavMeshAgent nav;
     public Transform playerTransform;
-
-
+    // This enemy is worth 100 xp
+    public int exp_worth = 100;
     public enum State
     {
         follow,
+        attack,
         dead,
     }
     State state;
     public static float speed;
 
-
     void Start()
     {
-        speed=3;
+        speed = 3;
 
         curState = State.follow;
         nav = GetComponent<NavMeshAgent>();
@@ -79,23 +65,18 @@ public class MeleeEnemy : MonoBehaviour
         }
 
         elapsedTime += Time.deltaTime;
-
+        // Always want the enemies following and attacking
+        UpdateChaseState();
         if (health <= 0)
         {
             curState = State.dead;
         }
-        float dis = Vector3.Distance(transform.position,playerTransform.position);
-        if (dis<=10){
-            UpdateChaseState();
-
-        }
+        float dis = Vector3.Distance(transform.position, playerTransform.position);
 
     }
 
     protected void UpdateChaseState()
     {
-       // nav.speed = 0;
-        //playerTransform = GameObject.Find("Player").transform;
         if (playerTransform != null)
         {
 
@@ -103,18 +84,15 @@ public class MeleeEnemy : MonoBehaviour
             //nav.speed = movingSpeed;
             //nav.destination = playerTransform.position;
             //StartCoroutine(Reset());
-           // nav.SetDestination(playerTransform.position);
-            float dir = playerTransform.position.x-transform.position.x;
-            float ydir=playerTransform.position.y-transform.position.y;
+            // nav.SetDestination(playerTransform.position);
+            float dir = playerTransform.position.x - transform.position.x;
+            float ydir = playerTransform.position.y - transform.position.y;
 
             dir = (dir < 0) ? -1 : 1;
             ydir = (ydir < 0) ? -1 : 1;
 
             transform.Translate(new Vector2(dir, ydir) * MeleeEnemy.speed * Time.deltaTime);
-
         }
-
-
     }
 
     protected void UpdateDeadState()
@@ -123,7 +101,9 @@ public class MeleeEnemy : MonoBehaviour
         if (!bDead)
         {
             bDead = true;
-            nav.enabled = false;
+            playerTransform.gameObject.SendMessage("GiveEXP", (int) exp_worth);
+            //nav.enabled = false;
+            Destroy(gameObject);
         }
     }
     IEnumerator Reset()
@@ -133,9 +113,9 @@ public class MeleeEnemy : MonoBehaviour
         nav.isStopped = false;
     }
 
-    public void ApplyDamage(int damage){
-        health-=damage;
+    public void ApplyDamage(int damage)
+    {
+        health -= damage;
         Debug.Log(health);
-        
     }
 }

@@ -27,7 +27,7 @@ public class Bullet : MonoBehaviour
                 Destroy(gameObject);
                 GameObject obj=hit.collider.gameObject;
                 if(obj.tag=="enemy1"){
-                    enemy1 enemy=(enemy1) obj.GetComponent(typeof(enemy1));
+                    MeleeEnemy enemy=(MeleeEnemy) obj.GetComponent(typeof(MeleeEnemy));
                     enemy.ApplyDamage(damage);
                     Debug.Log("Hit");
                     

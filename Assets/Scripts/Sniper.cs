@@ -82,7 +82,7 @@ public class Sniper : MonoBehaviour
             dir = (dir < 0) ? -1 : 1;
             ydir = (ydir < 0) ? -1 : 1;
 
-            transform.Translate(new Vector2(dir, ydir) * enemy1.speed * Time.deltaTime);
+            transform.Translate(new Vector2(dir, ydir) * MeleeEnemy.speed * Time.deltaTime);
 
         }
     }

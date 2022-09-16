@@ -121,7 +121,7 @@ public class MeleeEnemy : MonoBehaviour
     void OnTriggerEnter(Collider other) {
         if (other.gameObject.CompareTag("Player")){
             nav.isStopped=true;
-            new WaitForSeconds(2);
+            new WaitForSeconds(10);
             nav.isStopped=false;
             
         }

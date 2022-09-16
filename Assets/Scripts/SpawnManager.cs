@@ -15,6 +15,7 @@ public class SpawnManager : MonoBehaviour
     public int respawnTime;
     public int currentTime;
     public int increaseRespawn;
+    public int reset;
 
     
     // Start is called before the first frame update
@@ -69,7 +70,10 @@ public class SpawnManager : MonoBehaviour
             respawnTime-=1;
             //Debug.Log(respawnTime);
         }
-
+        if(Mathf.Floor(currentTime&reset)==0){
+            respawnTime==15;
+            //Debug.Log(respawnTime);
+        }
   
     }
     void manageEnemyNum() {

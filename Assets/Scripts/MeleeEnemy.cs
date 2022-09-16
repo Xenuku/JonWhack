@@ -21,7 +21,7 @@ public class MeleeEnemy : MonoBehaviour
     public int moving = 0;
 
     private NavMeshAgent nav;
-    public Transform playerTransform;
+    private Transform playerTransform;
     // This enemy is worth 100 xp
     public int exp_worth = 100;
     public enum State
@@ -31,11 +31,12 @@ public class MeleeEnemy : MonoBehaviour
         dead,
     }
     State state;
-    public static float speed;
+    public float speed;
 
     void Start()
     {
         speed = 1;
+        playerTransform = GameObject.Find("Player").transform;
 
         curState = State.follow;
         nav = GetComponent<NavMeshAgent>();
@@ -72,7 +73,15 @@ public class MeleeEnemy : MonoBehaviour
             curState = State.dead;
         }
         float dis = Vector3.Distance(transform.position, playerTransform.position);
-
+        
+        // flip sprite depending which way the enemy is walking
+        Vector3 localScale = Vector3.one;
+        if(playerTransform.position.x >= transform.position.x) {
+            localScale.x = -1f;
+        } else {
+            localScale.x = +1f;
+        }
+        transform.localScale = localScale;
     }
 
     protected void UpdateChaseState()
@@ -91,7 +100,7 @@ public class MeleeEnemy : MonoBehaviour
             dir = (dir < 0) ? -1 : 1;
             ydir = (ydir < 0) ? -1 : 1;
 
-            transform.Translate(new Vector2(dir, ydir) * MeleeEnemy.speed * Time.deltaTime);
+            transform.Translate(new Vector2(dir, ydir) * speed * Time.deltaTime);
         }
     }
 
@@ -120,6 +129,7 @@ public class MeleeEnemy : MonoBehaviour
     }
     void OnCollisionStay2D(Collision2D other) {
         if (other.collider.gameObject.tag == "Player"){
+            other.gameObject.SendMessage("ApplyDamage", 1);
             speed = 0;
         }
     }

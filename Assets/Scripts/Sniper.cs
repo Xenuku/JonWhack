@@ -29,7 +29,7 @@ public class Sniper : MonoBehaviour
 
     public float attackRange = 20.0f;
     private NavMeshAgent nav;
-    public static float speed;
+    public float speed;
 
 
     // Start is called before the first frame update
@@ -82,7 +82,7 @@ public class Sniper : MonoBehaviour
             dir = (dir < 0) ? -1 : 1;
             ydir = (ydir < 0) ? -1 : 1;
 
-            transform.Translate(new Vector2(dir, ydir) * MeleeEnemy.speed * Time.deltaTime);
+            transform.Translate(new Vector2(dir, ydir) * speed * Time.deltaTime);
 
         }
     }

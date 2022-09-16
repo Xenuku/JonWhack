@@ -9,9 +9,7 @@ using TMPro;
 
 public class PlayerController : MonoBehaviour
 {
-    protected float elapsedTime;
     public Rigidbody2D rb;
-    public float shootRate = 0.5f;
     public float moveSpeed = 5f;
     private Vector2 movement;
     private const float MAXHEALTH = 100f;
@@ -29,7 +27,6 @@ public class PlayerController : MonoBehaviour
         health = MAXHEALTH;
         healthBar = GameObject.Find("HealthBar").GetComponent<Image>();
         expBar = GameObject.Find("ExpBar").GetComponent<Image>();
-        elapsedTime = shootRate; // First shot can fire (thanks Dimitri)
     }
     // Update is called once per frame
     void Update()

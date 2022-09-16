@@ -6,7 +6,6 @@ public class Bullet : MonoBehaviour
 {
     public int damage = 10;
     public float speed = 10.0f;
-
     public float lifeTime = 2.0f;
     private Vector2 newPos;
     void Start()
@@ -20,16 +19,19 @@ public class Bullet : MonoBehaviour
         newPos = transform.position + transform.forward * speed * Time.deltaTime;
         transform.position = newPos;
     }
-    private void OnCollisionEnter2D(Collision2D other) {
-        print("I hit something " + other.gameObject);
-        if (other.collider.gameObject.tag == "Enemy") {
-            print("Hit enemy");
+    private void OnCollisionEnter2D(Collision2D other)
+    {
+        if (other.collider.gameObject.tag == "Enemy")
+        {
+            print("Hit enemy with " + other.collider.gameObject.GetComponent<MeleeEnemy>().health);
             Destroy(gameObject);
-            other.gameObject.SendMessage("ApplyDamage", damage);
-        } else {
+            other.collider.gameObject.GetComponent<MeleeEnemy>().health -= 10;
+        }
+        else
+        {
             // if it hits another obstacle, just destroy it
             Destroy(gameObject);
         }
-        
+
     }
 }

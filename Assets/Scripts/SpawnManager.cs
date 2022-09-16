@@ -9,7 +9,7 @@ public class SpawnManager : MonoBehaviour
 
     public int enemyNum;
 
-    public GameObject [] EnemyObj;
+    public GameObject [] EnemyTypes;
     public Transform[] spawnPoint;
 
     public int respawnTime;
@@ -25,7 +25,7 @@ public class SpawnManager : MonoBehaviour
         enemyNum=1;
         currentTime=0;
         respawnTime=15; //every 3 seconds
-        int ranEnemy = Random.Range(0, EnemyObj.Length);
+        int ranEnemy = Random.Range(0, EnemyTypes.Length);
         //Debug.Log(ranEnemy);
 
         //InvokeRepeating("SpawnEnemy", 3, 1); // after 3sec do this everysec;

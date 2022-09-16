@@ -92,4 +92,10 @@ public class PlayerController : MonoBehaviour
         // We can use this later to give a stats screen
         kills += 1;
     }
+
+    public void Test(int testint){
+
+        Debug.Log(testint);
+        
+    }
 }

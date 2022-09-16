@@ -35,7 +35,7 @@ public class MeleeEnemy : MonoBehaviour
 
     void Start()
     {
-        speed = 3;
+        speed = 1;
 
         curState = State.follow;
         nav = GetComponent<NavMeshAgent>();
@@ -117,5 +117,13 @@ public class MeleeEnemy : MonoBehaviour
     {
         health -= damage;
         Debug.Log(health);
+    }
+    void OnTriggerEnter(Collider other) {
+        if (other.gameObject.CompareTag("Player")){
+            nav.isStopped=true;
+            new WaitForSeconds(2);
+            nav.isStopped=false;
+            
+        }
     }
 }

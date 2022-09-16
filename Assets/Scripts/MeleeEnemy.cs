@@ -118,12 +118,14 @@ public class MeleeEnemy : MonoBehaviour
         health -= damage;
         Debug.Log(health);
     }
-    void OnTriggerEnter(Collider other) {
-        if (other.gameObject.CompareTag("Player")){
-            nav.isStopped=true;
-            new WaitForSeconds(2);
-            nav.isStopped=false;
-            
+    void OnCollisionStay2D(Collision2D other) {
+        if (other.collider.gameObject.tag == "Player"){
+            speed = 0;
+        }
+    }
+    private void OnCollisionExit2D(Collision2D other) {
+        if(other.collider.gameObject.tag == "Player") {
+            speed = 1;
         }
     }
 }

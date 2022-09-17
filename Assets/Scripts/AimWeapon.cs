@@ -61,7 +61,7 @@ public class AimWeapon : MonoBehaviour
         }
         aimTransform.localScale = localScale;
     }
-
+    
     private void HandleShooting()
     {
         if (Input.GetButton("Fire1"))

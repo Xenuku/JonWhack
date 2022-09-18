@@ -57,6 +57,18 @@ public class Sniper : MonoBehaviour
     {
         dist = Vector2.Distance(transform.position, playerTransform.position);
         elapsedTime += Time.deltaTime;
+         // flip sprite depending which way the enemy is walking
+        Vector3 bodyScale = new Vector3(0.04f, 0.04f, 0);
+        if (playerTransform.position.x >= transform.position.x)
+        {
+            bodyScale.x = +0.04f;
+        }
+        else
+        {
+            bodyScale.x = -0.04f;
+           
+        }
+        transform.localScale = bodyScale;
 
         switch (curState)
         {
@@ -71,29 +83,28 @@ public class Sniper : MonoBehaviour
         {
             curState = State.dead;
         }
+        AimSniper();
+    }
 
-        // flip sprite depending which way the enemy is walking
-        Vector3 bodyScale = new Vector3(0.04f, 0.04f, 0);
-        Vector3 sniperScale = new Vector3(0.8f, 0.8f, 0);
-        Vector3 endPointPos = new Vector3(19.7f, 1.2f, 0);
-        if (playerTransform.position.x >= transform.position.x)
+    protected void AimSniper()
+    {
+        // Aim sniper at player
+        Vector3 aimDirection = (playerTransform.position - transform.position).normalized;
+        float angle = Mathf.Atan2(aimDirection.y, aimDirection.x) * Mathf.Rad2Deg;
+        sniperRifle.transform.eulerAngles = new Vector3(0, 0, angle);
+
+        Vector3 localScale = Vector3.one;
+        if (angle > 90 || angle < -90)
         {
-            bodyScale.x = +0.04f;
-            sniperScale.x = +0.8f;
-            sniperScale.y = +1.2f;
-            endPointPos.x = +19.7f;
+            localScale.y = -1f;
+            localScale.x = -1f;
         }
         else
         {
-            bodyScale.x = -0.04f;
-            sniperScale.x = -0.8f;
-            sniperScale.y = -1.2f;
-            endPointPos.x = -19.7f;
+            localScale.y = +1f;
+            localScale.x = +1f;
         }
-        transform.localScale = bodyScale;
-        sniperRifle.transform.localScale = sniperScale;
-        bulletSpawnPoint.transform.localPosition = endPointPos;
-        
+        sniperRifle.transform.localScale = localScale;
     }
     protected void UpdateFollowState()
     {
@@ -116,26 +127,7 @@ public class Sniper : MonoBehaviour
     protected void UpdateAttackState()
     {
         // Temp, need to change this with a red sprite eventually and draw properly
-        Debug.DrawLine(playerTransform.position, bulletSpawnPoint.transform.position, Color.red);
-
-        // Aim sniper at player
-        Vector3 aimDirection = (playerTransform.position - transform.position).normalized;
-        float angle = Mathf.Atan2(aimDirection.y, aimDirection.x) * Mathf.Rad2Deg;
-        sniperRifle.transform.eulerAngles = new Vector3(0, 0, angle);
-
-        Vector3 localScale = Vector3.one;
-        if (angle > 90 || angle < -90)
-        {
-            //playerSprite.flipX = true;
-            localScale.y = -1f;
-        }
-        else
-        {
-            //playerSprite.flipX = false;
-            localScale.y = +1f;
-        }
-        sniperRifle.transform.localScale = localScale;
-        
+        Debug.DrawLine(playerTransform.position, bulletSpawnPoint.transform.position, Color.red);        
 
         // Switch to follow if not in range to attack 
         if (dist > attackRange)

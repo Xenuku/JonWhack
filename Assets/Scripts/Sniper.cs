@@ -11,14 +11,14 @@ public class Sniper : MonoBehaviour
     protected bool bDead;
     public int health = 10;
     // ranges
- 	public float attackRange = 10.0f;
-	public float attackRangeStop = 5.0f;
+    public float attackRange = 10.0f;
+    public float attackRangeStop = 5.0f;
     public int moving = 0;
 
     private NavMeshAgent nav;
     private Transform playerTransform;
-    // This enemy is worth 100 xp
-    public int exp_worth = 100;
+    // This enemy is worth 150 xp
+    public int exp_worth = 150;
     public enum State
     {
         follow,
@@ -27,16 +27,16 @@ public class Sniper : MonoBehaviour
     }
     State state;
     public float speed;
+    private float dist;
 
-    
-    
+
     public GameObject bullet;
-	public GameObject bulletSpawnPoint;
+    public GameObject bulletSpawnPoint;
 
     // Start is called before the first frame update
     void Start()
     {
-       speed = 1;
+        speed = 1;
         playerTransform = GameObject.Find("Player").transform;
 
         curState = State.follow;
@@ -52,8 +52,8 @@ public class Sniper : MonoBehaviour
         {
             print("Player doesn't exist.. Please add one with Tag named 'Player'");
         }
-        
-        float dist=Vector2.Distance(transform.position,playerTransform.position);
+
+        dist = Vector2.Distance(transform.position, playerTransform.position);
         //Debug.Log(dist);
 
     }
@@ -61,42 +61,41 @@ public class Sniper : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-       float dist=Vector2.Distance(transform.position,playerTransform.position);
+        dist = Vector2.Distance(transform.position, playerTransform.position);
 
-       switch (curState)
+        switch (curState)
         {
-            case State.follow: UpdateChaseState(); break;
+            case State.follow: UpdateFollowState(); break;
             case State.dead: UpdateDeadState(); break;
             case State.attack: UpdateAttackState(); break;
 
         }
 
         elapsedTime += Time.deltaTime;
-        // Always want the enemies following and attacking
-        UpdateChaseState();
+
+        // If no health, switch to dead state
         if (health <= 0)
         {
             curState = State.dead;
         }
-        if(dist<attackRange){
-            curState=State.attack;
 
-        }
-        
         // flip sprite depending which way the enemy is walking
         Vector3 localScale = Vector3.one;
-        if(playerTransform.position.x >= transform.position.x) {
+        if (playerTransform.position.x >= transform.position.x)
+        {
             localScale.x = -1f;
-        } else {
+        }
+        else
+        {
             localScale.x = +1f;
         }
         transform.localScale = localScale;
     }
-    protected void UpdateChaseState()
+    protected void UpdateFollowState()
     {
+        Debug.Log("Follow state, dist: " + dist);
         if (playerTransform != null)
         {
-
             float dir = playerTransform.position.x - transform.position.x;
             float ydir = playerTransform.position.y - transform.position.y;
 
@@ -105,64 +104,56 @@ public class Sniper : MonoBehaviour
 
             transform.Translate(new Vector2(dir, ydir) * speed * Time.deltaTime);
         }
+        // Switch to attack if in range
+        if (dist < attackRange)
+        {
+            curState = State.attack;
+        }
+        Debug.DrawLine(playerTransform.position, transform.position);
     }
-    protected void UpdateAttackState(){
-        Debug.Log("check1");
-        float dist=Vector2.Distance(transform.position,playerTransform.position);
-        if(dist>attackRange){
-            curState=State.follow;
-        }else{
-            ShootBullet();
-            StartCoroutine(Reset());
-
-            
-             }
-
+    protected void UpdateAttackState()
+    {
+        Debug.Log("Attack state, dist: " + dist);
+        // Switch to follow if not in range to attack 
+        if (dist > attackRange)
+        {
+            curState = State.follow;
+        }
+        ShootBullet();
     }
-    
+
     protected void UpdateDeadState()
     {
-        // Show the dead animation with some physics effects
         if (!bDead)
         {
             bDead = true;
-            playerTransform.gameObject.SendMessage("GiveEXP", (int) exp_worth);
+            playerTransform.gameObject.SendMessage("GiveEXP", (int)exp_worth);
             //nav.enabled = false;
             Destroy(gameObject);
         }
     }
-    IEnumerator Reset()
-    {
-        // nav.isStopped = true;
-        // yield return new WaitForSeconds(2);
-        // nav.isStopped = false;
-        speed=0;
-        yield return new WaitForSeconds(2);
-        speed=1;
-    }
+
     public void ApplyDamage(int damage)
     {
         health -= damage;
         Debug.Log(health);
     }
-    void OnCollisionStay2D(Collision2D other) {
-        if (other.collider.gameObject.tag == "Player"){
-            other.gameObject.SendMessage("ApplyDamage", 1);
-            speed = 0;
-        }
-    }
-    private void OnCollisionExit2D(Collision2D other) {
-        if(other.collider.gameObject.tag == "Player") {
-            speed = 1;
-        }
-    }
-    private void ShootBullet(){
-        if(elapsedTime>=shootRate){
-            if( (bullet)){
-                Instantiate(bullet);
+   
+    private void ShootBullet()
+    {
+        if (elapsedTime >= shootRate)
+        {
+            if ((bullet))
+            {
+                Vector2 direction = (Vector2)((playerTransform.position - transform.position));
+                direction.Normalize();
+                GameObject sniperBullet = (GameObject)Instantiate(
+                                    bullet,
+                                    bulletSpawnPoint.transform.position + (Vector3)(direction * 0.5f),
+                                    Quaternion.identity);
+                sniperBullet.GetComponent<Rigidbody2D>().velocity = direction * 5.0f;
             }
-            elapsedTime=0.0f;
-
+            elapsedTime = 0.0f;
         }
     }
 }

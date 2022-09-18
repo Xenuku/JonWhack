@@ -8,7 +8,6 @@ public class Sniper : MonoBehaviour
     public GameObject Enemy;
     public float shootRate = 3.0f;
     protected float elapsedTime;
-    protected bool bDead;
     public int health = 10;
     // ranges
     public float attackRange = 10.0f;
@@ -41,7 +40,6 @@ public class Sniper : MonoBehaviour
 
         curState = State.follow;
         nav = GetComponent<NavMeshAgent>();
-        bDead = false;
         elapsedTime = 0.0f;
 
         //GameObject objPlayer = GameObject.FindGameObjectWithTag("Player");
@@ -124,13 +122,11 @@ public class Sniper : MonoBehaviour
 
     protected void UpdateDeadState()
     {
-        if (!bDead)
-        {
-            bDead = true;
+       
             playerTransform.gameObject.SendMessage("GiveEXP", (int)exp_worth);
             //nav.enabled = false;
             Destroy(gameObject);
-        }
+        
     }
 
     public void ApplyDamage(int damage)

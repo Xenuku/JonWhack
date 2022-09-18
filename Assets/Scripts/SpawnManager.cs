@@ -54,7 +54,7 @@ public class SpawnManager : MonoBehaviour
         float randomX = Random.Range(Camera.main.transform.position.x-15.0f, Camera.main.transform.position.x+15.0f); 
         float randomY =Random.Range(Camera.main.transform.position.y-15.0f, Camera.main.transform.position.y+15.0f); 
         if (enableSpawn){
-            GameObject enemy=(GameObject)Instantiate(Enemy, new Vector2(randomX, randomY), Quaternion.identity);
+            GameObject enemy=(GameObject)Instantiate(EnemyTypes[ranEnemy], new Vector2(randomX, randomY), Quaternion.identity);
             enemyNum+=1;
         }
     }
@@ -90,6 +90,9 @@ public class SpawnManager : MonoBehaviour
             enableSpawn=true;
         }
         //Debug.Log(enemyNum);
+    }
+    void reduceEnemy(int die){
+        enemyNum-=die;
     }
     
 }

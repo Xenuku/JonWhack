@@ -22,6 +22,8 @@ public class MeleeEnemy : MonoBehaviour
 
     private NavMeshAgent nav;
     private Transform playerTransform;
+    private Transform SpawnManager;
+
     // This enemy is worth 100 xp
     public int exp_worth = 100;
     public enum State
@@ -37,6 +39,7 @@ public class MeleeEnemy : MonoBehaviour
     {
         speed = 1;
         playerTransform = GameObject.Find("Player").transform;
+        SpawnManager = GameObject.Find("SpawnManager").transform;
 
         curState = State.follow;
         nav = GetComponent<NavMeshAgent>();
@@ -50,6 +53,10 @@ public class MeleeEnemy : MonoBehaviour
         if (!playerTransform)
         {
             print("Player doesn't exist.. Please add one with Tag named 'Player'");
+        }
+         if (!SpawnManager)
+        {
+            print("respawn doesn't exist.. Please add one with Tag named 'respawn'");
         }
     }
 
@@ -108,6 +115,8 @@ public class MeleeEnemy : MonoBehaviour
         {
             bDead = true;
             playerTransform.gameObject.SendMessage("GiveEXP", (int) exp_worth);
+            SpawnManager.gameObject.SendMessage("reduceEnemy", (int)1);
+
             //nav.enabled = false;
             Destroy(gameObject);
         }

@@ -15,6 +15,8 @@ public class Sniper : MonoBehaviour
 
     private NavMeshAgent nav;
     private Transform playerTransform;
+    private Transform SpawnManager;
+
     // This enemy is worth 150 xp
     public int exp_worth = 150;
     public enum State
@@ -37,6 +39,7 @@ public class Sniper : MonoBehaviour
     {
         speed = 1;
         playerTransform = GameObject.Find("Player").transform;
+        SpawnManager = GameObject.Find("SpawnManager").transform;
 
         curState = State.follow;
         nav = GetComponent<NavMeshAgent>();
@@ -49,6 +52,10 @@ public class Sniper : MonoBehaviour
         if (!playerTransform)
         {
             print("Player doesn't exist.. Please add one with Tag named 'Player'");
+        }
+        if (!SpawnManager)
+        {
+            print("respawn doesn't exist.. Please add one with Tag named 'respawn'");
         }
 
         dist = Vector2.Distance(transform.position, playerTransform.position);
@@ -142,6 +149,8 @@ public class Sniper : MonoBehaviour
     protected void UpdateDeadState()
     {
         playerTransform.gameObject.SendMessage("GiveEXP", (int)exp_worth);
+        SpawnManager.gameObject.SendMessage("reduceEnemy", (int)1);
+
         //nav.enabled = false;
         Destroy(gameObject);
     }

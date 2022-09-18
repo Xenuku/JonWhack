@@ -12,8 +12,6 @@ public class Sniper : MonoBehaviour
     public float attackRange = 10.0f;
     public float attackRangeStop = 5.0f;
     public int moving = 0;
-
-    private NavMeshAgent nav;
     private Transform playerTransform;
     private Transform SpawnManager;
 
@@ -40,14 +38,9 @@ public class Sniper : MonoBehaviour
         speed = 1;
         playerTransform = GameObject.Find("Player").transform;
         SpawnManager = GameObject.Find("SpawnManager").transform;
-
         curState = State.follow;
-        nav = GetComponent<NavMeshAgent>();
         elapsedTime = 0.0f;
-
-        //GameObject objPlayer = GameObject.FindGameObjectWithTag("Player");
-        //playerTransform = objPlayer.transform;
-        //Debug.Log(playerTransform);
+        dist = Vector2.Distance(transform.position, playerTransform.position);
 
         if (!playerTransform)
         {
@@ -57,15 +50,13 @@ public class Sniper : MonoBehaviour
         {
             print("respawn doesn't exist.. Please add one with Tag named 'respawn'");
         }
-
-        dist = Vector2.Distance(transform.position, playerTransform.position);
-        //Debug.Log(dist);
     }
 
     // Update is called once per frame
     void Update()
     {
         dist = Vector2.Distance(transform.position, playerTransform.position);
+        elapsedTime += Time.deltaTime;
 
         switch (curState)
         {
@@ -75,8 +66,6 @@ public class Sniper : MonoBehaviour
 
         }
 
-        elapsedTime += Time.deltaTime;
-
         // If no health, switch to dead state
         if (health <= 0)
         {
@@ -84,20 +73,30 @@ public class Sniper : MonoBehaviour
         }
 
         // flip sprite depending which way the enemy is walking
-        Vector3 localScale = new Vector3(0.04f, 0.04f, 1);
+        Vector3 bodyScale = new Vector3(0.04f, 0.04f, 0);
+        Vector3 sniperScale = new Vector3(0.8f, 0.8f, 0);
+        Vector3 endPointPos = new Vector3(19.7f, 1.2f, 0);
         if (playerTransform.position.x >= transform.position.x)
         {
-            localScale.x = +0.04f;
+            bodyScale.x = +0.04f;
+            sniperScale.x = +0.8f;
+            sniperScale.y = +1.2f;
+            endPointPos.x = +19.7f;
         }
         else
         {
-            localScale.x = -0.04f;
+            bodyScale.x = -0.04f;
+            sniperScale.x = -0.8f;
+            sniperScale.y = -1.2f;
+            endPointPos.x = -19.7f;
         }
-        transform.localScale = localScale;
+        transform.localScale = bodyScale;
+        sniperRifle.transform.localScale = sniperScale;
+        bulletSpawnPoint.transform.localPosition = endPointPos;
+        
     }
     protected void UpdateFollowState()
     {
-        Debug.Log("Follow state, dist: " + dist);
         if (playerTransform != null)
         {
             float dir = playerTransform.position.x - transform.position.x;
@@ -150,15 +149,7 @@ public class Sniper : MonoBehaviour
     {
         playerTransform.gameObject.SendMessage("GiveEXP", (int)exp_worth);
         SpawnManager.gameObject.SendMessage("reduceEnemy", (int)1);
-
-        //nav.enabled = false;
         Destroy(gameObject);
-    }
-
-    public void ApplyDamage(int damage)
-    {
-        health -= damage;
-        Debug.Log(health);
     }
    
     private void ShootBullet()

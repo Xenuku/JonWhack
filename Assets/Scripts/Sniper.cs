@@ -4,7 +4,7 @@ using UnityEngine.AI;
 
 public class Sniper : MonoBehaviour
 {
-     public State curState;
+    public State curState;
     public GameObject Enemy;
     public float shootRate = 3.0f;
     protected float elapsedTime;
@@ -112,11 +112,11 @@ public class Sniper : MonoBehaviour
         if(dist>attackRange){
             curState=State.follow;
         }else{
-            //StartCoroutine(Reset());
             ShootBullet();
-            speed=0;
+            StartCoroutine(Reset());
 
-        }
+            
+             }
 
     }
     
@@ -131,12 +131,15 @@ public class Sniper : MonoBehaviour
             Destroy(gameObject);
         }
     }
-    // IEnumerator Reset()
-    // {
-    //     nav.isStopped = true;
-    //     yield return new WaitForSeconds(2);
-    //     nav.isStopped = false;
-    // }
+    IEnumerator Reset()
+    {
+        // nav.isStopped = true;
+        // yield return new WaitForSeconds(2);
+        // nav.isStopped = false;
+        speed=0;
+        yield return new WaitForSeconds(2);
+        speed=1;
+    }
     public void ApplyDamage(int damage)
     {
         health -= damage;

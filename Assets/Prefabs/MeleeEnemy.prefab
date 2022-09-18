@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 6125475284028651337}
   m_Layer: 0
   m_Name: MeleeEnemy
-  m_TagString: Enemy
+  m_TagString: Melee
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -30,7 +30,7 @@ Transform:
   m_GameObject: {fileID: 7706359893753623784}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 10.76, y: -43.92, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.28, y: 0.25, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -77,7 +77,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 101
-  m_Sprite: {fileID: 21300000, guid: d69df19d736dca2aba17bb4e6445e7b1, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 6c0bba2458285ac458efdb7c508de8eb, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 1
   m_FlipY: 0
@@ -143,8 +143,8 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.0005726814, y: -1.1179882}
-  m_Size: {x: 0.935586, y: 1.4840233}
+  m_Offset: {x: 0, y: 0}
+  m_Size: {x: 4.17, y: 6.57}
   m_Direction: 0
 --- !u!95 &6125475284028651337
 Animator:

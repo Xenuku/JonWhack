@@ -51,10 +51,6 @@ public class MeleeEnemy : MonoBehaviour
         {
             print("Player doesn't exist.. Please add one with Tag named 'Player'");
         }
-
-           
-   
-
     }
 
     // Update is called once per frame
@@ -76,11 +72,11 @@ public class MeleeEnemy : MonoBehaviour
         float dis = Vector3.Distance(transform.position, playerTransform.position);
         
         // flip sprite depending which way the enemy is walking
-        Vector3 localScale = Vector3.one;
+        Vector3 localScale = new Vector3(0.25f, 0.28f, 1);
         if(playerTransform.position.x >= transform.position.x) {
-            localScale.x = -1f;
+            localScale.x = -0.25f;
         } else {
-            localScale.x = +1f;
+            localScale.x = +0.25f;
         }
         transform.localScale = localScale;
     }

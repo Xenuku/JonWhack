@@ -5,7 +5,6 @@ using UnityEngine.AI;
 public class Sniper : MonoBehaviour
 {
     public State curState;
-    public GameObject Enemy;
     public float shootRate = 3.0f;
     protected float elapsedTime;
     public int health = 10;
@@ -28,9 +27,10 @@ public class Sniper : MonoBehaviour
     public float speed;
     private float dist;
 
-
+    // Weapon related
     public GameObject bullet;
     public GameObject bulletSpawnPoint;
+    public GameObject sniperRifle;
 
     // Start is called before the first frame update
     void Start()
@@ -53,7 +53,6 @@ public class Sniper : MonoBehaviour
 
         dist = Vector2.Distance(transform.position, playerTransform.position);
         //Debug.Log(dist);
-
     }
 
     // Update is called once per frame
@@ -78,14 +77,14 @@ public class Sniper : MonoBehaviour
         }
 
         // flip sprite depending which way the enemy is walking
-        Vector3 localScale = Vector3.one;
+        Vector3 localScale = new Vector3(0.04f, 0.04f, 1);
         if (playerTransform.position.x >= transform.position.x)
         {
-            localScale.x = -1f;
+            localScale.x = +0.04f;
         }
         else
         {
-            localScale.x = +1f;
+            localScale.x = -0.04f;
         }
         transform.localScale = localScale;
     }
@@ -107,11 +106,31 @@ public class Sniper : MonoBehaviour
         {
             curState = State.attack;
         }
-        Debug.DrawLine(playerTransform.position, transform.position);
     }
     protected void UpdateAttackState()
     {
-        Debug.Log("Attack state, dist: " + dist);
+        // Temp, need to change this with a red sprite eventually and draw properly
+        Debug.DrawLine(playerTransform.position, bulletSpawnPoint.transform.position, Color.red);
+
+        // Aim sniper at player
+        Vector3 aimDirection = (playerTransform.position - transform.position).normalized;
+        float angle = Mathf.Atan2(aimDirection.y, aimDirection.x) * Mathf.Rad2Deg;
+        sniperRifle.transform.eulerAngles = new Vector3(0, 0, angle);
+
+        Vector3 localScale = Vector3.one;
+        if (angle > 90 || angle < -90)
+        {
+            //playerSprite.flipX = true;
+            localScale.y = -1f;
+        }
+        else
+        {
+            //playerSprite.flipX = false;
+            localScale.y = +1f;
+        }
+        sniperRifle.transform.localScale = localScale;
+        
+
         // Switch to follow if not in range to attack 
         if (dist > attackRange)
         {
@@ -122,11 +141,9 @@ public class Sniper : MonoBehaviour
 
     protected void UpdateDeadState()
     {
-       
-            playerTransform.gameObject.SendMessage("GiveEXP", (int)exp_worth);
-            //nav.enabled = false;
-            Destroy(gameObject);
-        
+        playerTransform.gameObject.SendMessage("GiveEXP", (int)exp_worth);
+        //nav.enabled = false;
+        Destroy(gameObject);
     }
 
     public void ApplyDamage(int damage)

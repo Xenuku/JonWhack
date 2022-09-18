@@ -8,6 +8,14 @@ public class Bullet : MonoBehaviour
     public float speed = 10.0f;
     public float lifeTime = 2.0f;
     private Vector2 newPos;
+
+    public enum EnemyTypes 
+    {
+        Melee,
+        Sniper
+    }
+    private string enemyType;
+
     void Start()
     {
         Destroy(gameObject, lifeTime);
@@ -21,20 +29,21 @@ public class Bullet : MonoBehaviour
     }
     private void OnCollisionEnter2D(Collision2D other)
     {
-        if (other.collider.gameObject.tag == "Enemy")
-        {
-            // Take the enemies health down
-            //other.collider.gameObject.GetComponent<MeleeEnemy>().health -= 10;
-            other.collider.gameObject.GetComponent<Sniper>().health -= 10;
-
-            // Destroy the bullet
-            Destroy(gameObject);
+        enemyType = other.collider.gameObject.tag;
+        switch(enemyType) {
+            case "Melee":
+                // Will take 2 shots to kill
+                other.collider.gameObject.GetComponent<MeleeEnemy>().health -= 10;
+                Destroy(gameObject);
+                break;
+            case "Sniper":
+                // Will take 1 shot to kill
+                other.collider.gameObject.GetComponent<Sniper>().health -= 10;
+                Destroy(gameObject);
+                break;
+            default:
+                Destroy(gameObject);
+                break;
         }
-        else
-        {
-            // if it hits another obstacle, just destroy it
-            Destroy(gameObject);
-        }
-
     }
 }

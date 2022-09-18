@@ -25,7 +25,7 @@ public class SpawnManager : MonoBehaviour
         enemyNum=1;
         currentTime=0;
         respawnTime=15; //every 3 seconds
-        int ranEnemy = Random.Range(0, EnemyTypes.Length);
+       
         //Debug.Log(ranEnemy);
 
         //InvokeRepeating("SpawnEnemy", 3, 1); // after 3sec do this everysec;
@@ -50,7 +50,7 @@ public class SpawnManager : MonoBehaviour
         //Debug.Log(Camera.main.transform.position.x);
         //Debug.Log(Camera.main.transform.position.y);
 
-
+        int ranEnemy = Random.Range(0, EnemyTypes.Length);
         float randomX = Random.Range(Camera.main.transform.position.x-15.0f, Camera.main.transform.position.x+15.0f); 
         float randomY =Random.Range(Camera.main.transform.position.y-15.0f, Camera.main.transform.position.y+15.0f); 
         if (enableSpawn){

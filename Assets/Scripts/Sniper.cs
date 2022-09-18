@@ -11,8 +11,8 @@ public class Sniper : MonoBehaviour
     protected bool bDead;
     public int health = 10;
     // ranges
-    public float attackRange = 5.0f;
-    public float attackRangeStop = 2.5f;
+ 	public float attackRange = 10.0f;
+	public float attackRangeStop = 5.0f;
     public int moving = 0;
 
     private NavMeshAgent nav;
@@ -27,7 +27,11 @@ public class Sniper : MonoBehaviour
     }
     State state;
     public float speed;
- 
+
+    
+    
+    public GameObject bullet;
+	public GameObject bulletSpawnPoint;
 
     // Start is called before the first frame update
     void Start()
@@ -48,12 +52,17 @@ public class Sniper : MonoBehaviour
         {
             print("Player doesn't exist.. Please add one with Tag named 'Player'");
         }
+        
+        float dist=Vector2.Distance(transform.position,playerTransform.position);
+        //Debug.Log(dist);
 
     }
 
     // Update is called once per frame
     void Update()
     {
+       float dist=Vector2.Distance(transform.position,playerTransform.position);
+
        switch (curState)
         {
             case State.follow: UpdateChaseState(); break;
@@ -69,7 +78,10 @@ public class Sniper : MonoBehaviour
         {
             curState = State.dead;
         }
-        float dis = Vector3.Distance(transform.position, playerTransform.position);
+        if(dist<attackRange){
+            curState=State.attack;
+
+        }
         
         // flip sprite depending which way the enemy is walking
         Vector3 localScale = Vector3.one;
@@ -95,6 +107,16 @@ public class Sniper : MonoBehaviour
         }
     }
     protected void UpdateAttackState(){
+        Debug.Log("check1");
+        float dist=Vector2.Distance(transform.position,playerTransform.position);
+        if(dist>attackRange){
+            curState=State.follow;
+        }else{
+            //StartCoroutine(Reset());
+            ShootBullet();
+            speed=0;
+
+        }
 
     }
     
@@ -109,12 +131,12 @@ public class Sniper : MonoBehaviour
             Destroy(gameObject);
         }
     }
-    IEnumerator Reset()
-    {
-        nav.isStopped = true;
-        yield return new WaitForSeconds(2);
-        nav.isStopped = false;
-    }
+    // IEnumerator Reset()
+    // {
+    //     nav.isStopped = true;
+    //     yield return new WaitForSeconds(2);
+    //     nav.isStopped = false;
+    // }
     public void ApplyDamage(int damage)
     {
         health -= damage;
@@ -131,5 +153,13 @@ public class Sniper : MonoBehaviour
             speed = 1;
         }
     }
+    private void ShootBullet(){
+        if(elapsedTime>=shootRate){
+            if( (bullet)){
+                Instantiate(bullet);
+            }
+            elapsedTime=0.0f;
 
+        }
+    }
 }

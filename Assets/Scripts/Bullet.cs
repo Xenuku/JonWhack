@@ -24,7 +24,9 @@ public class Bullet : MonoBehaviour
         if (other.collider.gameObject.tag == "Enemy")
         {
             // Take the enemies health down
-            other.collider.gameObject.GetComponent<MeleeEnemy>().health -= 10;
+            //other.collider.gameObject.GetComponent<MeleeEnemy>().health -= 10;
+            other.collider.gameObject.GetComponent<Sniper>().health -= 10;
+
             // Destroy the bullet
             Destroy(gameObject);
         }

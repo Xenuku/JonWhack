@@ -7,6 +7,10 @@ TagManager:
   - Enemy
   - Melee
   - Sniper
+  - SniperWeap
+  - Heavy
+  - Captain
+  - Support
   layers:
   - Default
   - TransparentFX
@@ -39,8 +43,11 @@ TagManager:
   - 
   - 
   - 
-  - 
+  - Enemies
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Enemies
+    uniqueID: 428100457
     locked: 0

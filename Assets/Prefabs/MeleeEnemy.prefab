@@ -76,7 +76,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 101
+  m_SortingOrder: 50
   m_Sprite: {fileID: 21300000, guid: 6c0bba2458285ac458efdb7c508de8eb, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 1
@@ -123,11 +123,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curState: 0
   Enemy: {fileID: 7706359893753623784}
-  shootRate: 3
   health: 20
-  attackRange: 5
-  attackRangeStop: 2.5
-  moving: 0
   exp_worth: 100
   speed: 0
 --- !u!70 &7706359893753623790

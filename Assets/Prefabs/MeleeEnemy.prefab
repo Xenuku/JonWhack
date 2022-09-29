@@ -125,6 +125,7 @@ MonoBehaviour:
   Enemy: {fileID: 7706359893753623784}
   health: 20
   exp_worth: 100
+  sprite: {fileID: 7706359893753623789}
   speed: 0
 --- !u!70 &7706359893753623790
 CapsuleCollider2D:

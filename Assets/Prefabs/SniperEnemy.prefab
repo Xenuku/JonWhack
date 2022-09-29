@@ -398,6 +398,7 @@ MonoBehaviour:
   attackRange: 10
   attackRangeStop: 5
   moving: 0
+  sprite: {fileID: 3754544099322314589}
   exp_worth: 150
   speed: 0
   bullet: {fileID: 4589092044648749052, guid: 299a59c7581eed71ea0961e7e308b8b9, type: 3}

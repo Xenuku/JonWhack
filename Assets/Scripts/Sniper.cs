@@ -14,6 +14,7 @@ public class Sniper : MonoBehaviour
     public int moving = 0;
     private Transform playerTransform;
     private Transform SpawnManager;
+    public SpriteRenderer sprite;
 
     // This enemy is worth 150 xp
     public int exp_worth = 150;
@@ -160,5 +161,11 @@ public class Sniper : MonoBehaviour
             }
             elapsedTime = 0.0f;
         }
+    }
+    public IEnumerator Flash()
+    {
+        sprite.color = Color.red;
+        yield return new WaitForSeconds(0.1f);
+        sprite.color = Color.white;
     }
 }

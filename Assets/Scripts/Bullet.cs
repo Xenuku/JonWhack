@@ -38,11 +38,13 @@ public class Bullet : MonoBehaviour
             case "Melee":
                 // Will take 2 shots to kill
                 other.collider.gameObject.GetComponent<MeleeEnemy>().health -= 10;
+                other.collider.gameObject.SendMessage("Flash");
                 Destroy(gameObject);
                 break;
             case "Sniper":
                 // Will take 1 shot to kill
                 other.collider.gameObject.GetComponent<Sniper>().health -= 10;
+                other.collider.gameObject.SendMessage("Flash");
                 Destroy(gameObject);
                 break;
             case "Heavy":

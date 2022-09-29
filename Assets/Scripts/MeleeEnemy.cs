@@ -18,7 +18,7 @@ public class MeleeEnemy : MonoBehaviour
     private Transform SpawnManager;
     // This enemy is worth 100 xp
     public int exp_worth = 100;
-
+    public SpriteRenderer sprite;
     public enum State
     {
         follow,
@@ -107,5 +107,12 @@ public class MeleeEnemy : MonoBehaviour
         {
             speed = 1;
         }
+    }
+
+    public IEnumerator Flash()
+    {
+        sprite.color = Color.red;
+        yield return new WaitForSeconds(0.1f);
+        sprite.color = Color.white;
     }
 }

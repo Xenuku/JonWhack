@@ -34,7 +34,7 @@ public class AimWeapon : MonoBehaviour
 
     private void Update()
     {
-        if (!PauseMenu.gameIsPaused) {
+        if (!PauseMenu.gameIsPaused || !UpgradeManager.upgradeScreenOpen) {
             mouseP = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             HandleAim();
             HandleShooting();

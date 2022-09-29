@@ -9,10 +9,14 @@ public class Bullet : MonoBehaviour
     public float lifeTime = 2.0f;
     private Vector2 newPos;
 
+    private GameObject slot1;
+
     public enum EnemyTypes 
     {
         Melee,
-        Sniper
+        Sniper,
+        Heavy,
+        Player,
     }
     private string enemyType;
 
@@ -39,6 +43,16 @@ public class Bullet : MonoBehaviour
             case "Sniper":
                 // Will take 1 shot to kill
                 other.collider.gameObject.GetComponent<Sniper>().health -= 10;
+                Destroy(gameObject);
+                break;
+            case "Heavy":
+                other.collider.gameObject.GetComponent<Heavy>().health -= 10;
+                other.collider.gameObject.SendMessage("Flash");
+                Destroy(gameObject);
+                break;
+            case "Player":
+                other.collider.gameObject.GetComponent<PlayerController>().health -= 5;
+                other.collider.gameObject.SendMessage("Flash");
                 Destroy(gameObject);
                 break;
             default:

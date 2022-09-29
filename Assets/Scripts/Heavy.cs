@@ -19,11 +19,11 @@ public class Heavy : MonoBehaviour
     protected float timeElapsed = 0.0f;
 
     //enemy data
-    public int health = 50;
-    public float shootRate = 3.0f;
-    public float attackRange = 2.0f;
-    public float attackRangeStop = 5.0f;
-    public int exp_worth = 350;
+    public int health;
+    public float shootRate;
+    public float attackRange;
+    public float attackRangeStop;
+    public int exp_worth;
     protected bool Dead;
 
     //references
@@ -31,6 +31,9 @@ public class Heavy : MonoBehaviour
     private Transform SpawnManager;
     public Animator animator;
     public NavMeshAgent enemyAgent;
+    public GameObject bullet;
+    public GameObject bulletSpawnPoint;
+    public SpriteRenderer sprite;
 
     // Start is called before the first frame update
     void Start()
@@ -38,6 +41,7 @@ public class Heavy : MonoBehaviour
         playerTransform = GameObject.Find("Player").transform;
         //SpawnManager = GameObject.Find("SpawnManager").transform;
         curState = State.follow;
+        Dead = false;
 
         //Navmesh
         enemyAgent = GetComponent<NavMeshAgent>();
@@ -89,6 +93,7 @@ public class Heavy : MonoBehaviour
     {
         if (playerTransform != null)
         {
+            animator.SetBool("IsAttack", false);
             enemyAgent.SetDestination(playerTransform.position);
         }
         // Switch to attack if in range
@@ -102,10 +107,54 @@ public class Heavy : MonoBehaviour
     {
         animator.SetBool("IsAttack", true);
 
+        ShootBullet();
+
+        if (dist > attackRange)
+        {
+            curState = State.follow;
+        }
     }
 
     protected void UpdateDeadState()
     {
+        playerTransform.gameObject.SendMessage("GiveEXP", (int)exp_worth);
+        //SpawnManager.gameObject.SendMessage("reduceEnemy", (int)3);
+        Destroy(gameObject);
     }
 
+    private void ShootBullet()
+    {
+        if (timeElapsed >= shootRate)
+        {
+            if ((bullet))
+            {
+                Vector2 direction = (Vector2)((playerTransform.position - transform.position));
+                direction.Normalize();
+
+                GameObject sniperBullet = (GameObject)Instantiate(
+                                    bullet,
+                                    bulletSpawnPoint.transform.position + (Vector3)(direction * 0.5f),
+                                    Quaternion.identity);
+
+                sniperBullet.GetComponent<Rigidbody2D>().velocity = direction * 5.0f;
+            }
+
+            timeElapsed = 0.0f;
+        }
+    }
+
+    void OnCollisionStay2D(Collision2D other)
+    {
+        if (other.collider.gameObject.tag == "Player")
+        {
+            other.gameObject.SendMessage("ApplyDamage", 1);
+        }
+    }
+
+    public IEnumerator Flash()
+    {
+        sprite.color = Color.red;
+        yield return new WaitForSeconds(0.1f);
+        sprite.color = Color.white;
+    }
 }

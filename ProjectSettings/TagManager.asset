@@ -11,6 +11,7 @@ TagManager:
   - Heavy
   - Captain
   - Support
+  - Bullet
   layers:
   - Default
   - TransparentFX

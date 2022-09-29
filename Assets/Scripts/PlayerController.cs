@@ -22,6 +22,12 @@ public class PlayerController : MonoBehaviour
     public TMP_Text levelText;
     private int kills;
 
+    //animation
+    public Animator animator;
+
+    //references
+    public SpriteRenderer sprite;
+
     public void Start ()
     {
         health = MAXHEALTH;
@@ -58,6 +64,8 @@ public class PlayerController : MonoBehaviour
                         moveSpeed * 
                         Time.fixedDeltaTime
                     );
+
+
         if (experience >= levelExpRequired) {
             levelUp();
         }
@@ -94,5 +102,12 @@ public class PlayerController : MonoBehaviour
 
         Debug.Log(testint);
         
+    }
+
+    public IEnumerator Flash()
+    {
+        sprite.color = Color.red;
+        yield return new WaitForSeconds(0.1f);
+        sprite.color = Color.white;
     }
 }

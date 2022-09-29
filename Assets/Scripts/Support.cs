@@ -49,10 +49,10 @@ public class Support : MonoBehaviour
         {
             print("Player doesn't exist.. Please add one with Tag named 'Player'");
         }
-        if (!SpawnManager)
-        {
-            print("respawn doesn't exist.. Please add one with Tag named 'respawn'");
-        }
+        // if (!SpawnManager)
+        // {
+        //     print("respawn doesn't exist.. Please add one with Tag named 'respawn'");
+        // }
     }
 
     // Update is called once per frame

@@ -49,12 +49,6 @@ public class PlayerController : MonoBehaviour
             GiveEXP(100);
             ApplyDamage(10);
         }
-        
-        // Back to main menu on 'Escape' key press
-        if (Input.GetKey(KeyCode.Escape))
-        {
-            SceneManager.LoadScene("MainMenu");
-        }
     }
 
     void FixedUpdate() 

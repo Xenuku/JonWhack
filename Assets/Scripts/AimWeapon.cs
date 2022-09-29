@@ -20,7 +20,6 @@ public class AimWeapon : MonoBehaviour
         aimTransform = transform.Find("Aim");
         Vector2 cursorPos = new Vector2(crosshair.width / 2, crosshair.height / 2);
         SetCursor(crosshair, cursorPos);
-
     }
     void SetCursor(Texture2D sprite, Vector2 center)
     {
@@ -35,11 +34,12 @@ public class AimWeapon : MonoBehaviour
 
     private void Update()
     {
-        mouseP = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        HandleAim();
-        HandleShooting();
-        elapsedTime += Time.deltaTime;
-
+        if (!PauseMenu.gameIsPaused) {
+            mouseP = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            HandleAim();
+            HandleShooting();
+            elapsedTime += Time.deltaTime;
+        }
     }
 
     private void HandleAim()

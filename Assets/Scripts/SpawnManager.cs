@@ -16,16 +16,24 @@ public class SpawnManager : MonoBehaviour
     public int currentTime;
     public int increaseRespawn;
     public int reset;
+    public int enemy_num_limit;
+    //public randomX_1;
 
     
     // Start is called before the first frame update
     void Start()
-    {   
+    {   enemy_num_limit=14;
+
         increaseRespawn=30;
         enemyNum=1;
         currentTime=0;
         respawnTime=15; //every 3 seconds
-       
+        InvokeRepeating("AddSecond",20f,1f);
+        InvokeRepeating("SpawnSystem",1f,0.5f);
+        //InvokeRepeating("manageEnemyNum",5f,1f);
+        
+        SpawnEnemy();
+        
         //Debug.Log(ranEnemy);
 
         //InvokeRepeating("SpawnEnemy", 3, 1); // after 3sec do this everysec;
@@ -36,29 +44,46 @@ public class SpawnManager : MonoBehaviour
     {
         //curDelay+=Time.deltaTime;
         //currentTime+=(int) Time.deltaTime;
-        InvokeRepeating("AddSecond",20,5);
-        InvokeRepeating("SpawnSystem",5,5);
-        InvokeRepeating("manageEnemyNum",5,5);
+        
+       manageEnemyNum();
 
-        if(respawnTime<2){
-            CancelInvoke("SpawnSystem");
-        }
+       //SpawnSystem();
+        //Debug.Log(enemy_num_limit);
+
         
 
     }
     void SpawnEnemy(){
-        //Debug.Log(Camera.main.transform.position.x);
-        //Debug.Log(Camera.main.transform.position.y);
+
 
         int ranEnemy = Random.Range(0, EnemyTypes.Length);
-        float randomX = Random.Range(Camera.main.transform.position.x-15.0f, Camera.main.transform.position.x+15.0f); 
-        float randomY =Random.Range(Camera.main.transform.position.y-15.0f, Camera.main.transform.position.y+15.0f); 
+        
+        //randomX_1=Random.Range(Camera.main.transform.position.x-40.0f, Camera.main.transform.position.x-15.0f);
+        //randomX_2=Random.Range(Camera.main.transform.position.x+40.0f, Camera.main.transform.position.x+15.0f);
+        
+        //randomY_1=Random.Range(Camera.main.transform.position.y-40.0f, Camera.main.transform.position.y-15.0f);
+        //randomY_2=Random.Range(Camera.main.transform.position.y+40.0f, Camera.main.transform.position.y+15.0f);
+
+
+        //float randomX = Random.Range(Camera.main.transform.position.x-15.0f, Camera.main.transform.position.x+15.0f); 
+
+        float randomX = Random.Range(Random.Range(Camera.main.transform.position.x-50.0f, Camera.main.transform.position.x-40.0f), Random.Range(Camera.main.transform.position.x+50.0f, Camera.main.transform.position.x+40.0f));
+
+
+
+        //float randomY =Random.Range(Camera.main.transform.position.y-15.0f, Camera.main.transform.position.y+15.0f); 
+
+        float randomY =Random.Range(Random.Range(Camera.main.transform.position.y-50.0f, Camera.main.transform.position.y-40.0f),Random.Range(Camera.main.transform.position.y+50.0f, Camera.main.transform.position.y+40.0f)); 
+
+
         if (enableSpawn){
             GameObject enemy=(GameObject)Instantiate(EnemyTypes[ranEnemy], new Vector2(randomX, randomY), Quaternion.identity);
             enemyNum+=1;
         }
     }
     void AddSecond(){
+        //Debug.Log(currentTime);
+
         currentTime+=1;
 
     }
@@ -66,27 +91,30 @@ public class SpawnManager : MonoBehaviour
         //Debug.Log(currentTime);
         //Debug.Log(currentTime&respawnTime);
         if(Mathf.Floor(currentTime&respawnTime)==0){ //for respawn time
-           SpawnEnemy();
+            SpawnEnemy();
+            Debug.Log("spawnenemy working");
+
             //SpawnEnemy1();
         }
         if(Mathf.Floor(currentTime&increaseRespawn)==0){
             respawnTime-=1;
-            //Debug.Log(respawnTime);
+            enemy_num_limit+=1;
+            Debug.Log(respawnTime);
         }
         if(Mathf.Floor(currentTime&reset)==0){
             respawnTime=15;
-            //Debug.Log(respawnTime);
+            Debug.Log(respawnTime);
         }
   
     }
     void manageEnemyNum() {
       //Debug.Log(Mathf.Floor(currentTime&increaseRespawn)==0);
         
-        if(enemyNum>14){
+        if(enemyNum>enemy_num_limit){
             enableSpawn=false;
 
         }
-        else if(enemyNum<=15){
+        else if(enemyNum<=enemy_num_limit+1){
             enableSpawn=true;
         }
         //Debug.Log(enemyNum);

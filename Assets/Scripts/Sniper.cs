@@ -7,7 +7,7 @@ public class Sniper : MonoBehaviour
     public State curState;
     public float shootRate = 3.0f;
     protected float elapsedTime;
-    public int health = 10;
+    public int health = 30;
     // ranges
     public float attackRange = 10.0f;
     public float attackRangeStop = 5.0f;
@@ -18,6 +18,7 @@ public class Sniper : MonoBehaviour
 
     // This enemy is worth 150 xp
     public int exp_worth = 150;
+    public int score_worth;
     public enum State
     {
         follow,
@@ -33,14 +34,18 @@ public class Sniper : MonoBehaviour
     public GameObject bulletSpawnPoint;
     public GameObject sniperRifle;
 
+    public GameObject scoreManager;
+
     // Start is called before the first frame update
     void Start()
     {
         speed = 1;
         playerTransform = GameObject.Find("Player").transform;
         SpawnManager = GameObject.Find("SpawnManager").transform;
+        scoreManager = GameObject.Find("ScoreManager");
         curState = State.follow;
         elapsedTime = 0.0f;
+        score_worth = exp_worth * 2;
         dist = Vector2.Distance(transform.position, playerTransform.position);
 
         if (!playerTransform)
@@ -142,6 +147,7 @@ public class Sniper : MonoBehaviour
     {
         playerTransform.gameObject.SendMessage("GiveEXP", (int)exp_worth);
         SpawnManager.gameObject.SendMessage("reduceEnemy", (int)1);
+        scoreManager.GetComponent<ScoreManager>().AddToScore(score_worth);
         Destroy(gameObject);
     }
    

@@ -20,7 +20,6 @@ public class PlayerController : MonoBehaviour
     private Image healthBar;
     private Image expBar;
     public TMP_Text levelText;
-    private int kills;
 
     //animation
     public Animator animator;
@@ -81,15 +80,12 @@ public class PlayerController : MonoBehaviour
 
     void ApplyDamage(int damage) {
         health -= damage;
+        Flash();
     }
 
     // On Enemy death, they will send this to us to trigger XP for Jon
     void GiveEXP(int exp) {
         experience += exp;
-
-        // We only gain experience when we get a kill, so increase some stats
-        // We can use this later to give a stats screen
-        kills += 1;
     }
 
     public void Test(int testint){

@@ -18,7 +18,9 @@ public class MeleeEnemy : MonoBehaviour
     private Transform SpawnManager;
     // This enemy is worth 100 xp
     public int exp_worth = 100;
+    public int score_worth = 200;
     public SpriteRenderer sprite;
+    public GameObject scoreManager;
     public enum State
     {
         follow,
@@ -33,6 +35,7 @@ public class MeleeEnemy : MonoBehaviour
         speed = 1;
         playerTransform = GameObject.Find("Player").transform;
         SpawnManager = GameObject.Find("SpawnManager").transform;
+        scoreManager = GameObject.Find("ScoreManager");
         curState = State.follow;
         elapsedTime = 0.0f;
         if (!playerTransform)
@@ -89,6 +92,7 @@ public class MeleeEnemy : MonoBehaviour
     protected void UpdateDeadState()
     {
         playerTransform.gameObject.SendMessage("GiveEXP", (int)exp_worth);
+        scoreManager.GetComponent<ScoreManager>().AddToScore(score_worth);
         SpawnManager.gameObject.SendMessage("reduceEnemy", (int)1);
         Destroy(gameObject);
     }
@@ -98,6 +102,7 @@ public class MeleeEnemy : MonoBehaviour
         if (other.collider.gameObject.tag == "Player")
         {
             other.gameObject.SendMessage("ApplyDamage", 1);
+            other.gameObject.SendMessage("Flash");
             speed = 0;
         }
     }

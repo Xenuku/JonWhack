@@ -711,7 +711,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: CONFIGURE
+  m_text: CREDITS
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -901,7 +901,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -14.000038, y: -428.5423}
+  m_AnchoredPosition: {x: -14, y: -438.10004}
   m_SizeDelta: {x: 436.4289, y: 73.6269}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &860695627
@@ -1155,7 +1155,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -14, y: -258}
+  m_AnchoredPosition: {x: -14, y: -268.90002}
   m_SizeDelta: {x: 436.4289, y: 73.6269}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1469666727
@@ -1204,14 +1204,14 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1283294384}
         m_TargetAssemblyTypeName: Controller, Assembly-CSharp
-        m_MethodName: PlayGame
-        m_Mode: 1
+        m_MethodName: LoadLevel
+        m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument: Intro
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &1469666728
@@ -1341,7 +1341,7 @@ GameObject:
   - component: {fileID: 2063748188}
   - component: {fileID: 2063748187}
   m_Layer: 5
-  m_Name: ConfigBTN
+  m_Name: CreditsBTN
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1365,7 +1365,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -14.000038, y: -341.2304}
+  m_AnchoredPosition: {x: -14, y: -353.5}
   m_SizeDelta: {x: 436.4289, y: 75.3978}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2063748187
@@ -1414,14 +1414,14 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1283294384}
         m_TargetAssemblyTypeName: Controller, Assembly-CSharp
-        m_MethodName: Configure
-        m_Mode: 1
+        m_MethodName: LoadLevel
+        m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument: Credits
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &2063748188

@@ -19,11 +19,12 @@ public class Heavy : MonoBehaviour
     protected float timeElapsed = 0.0f;
 
     //enemy data
-    public int health;
+    public int health = 50;
     public float shootRate;
     public float attackRange;
     public float attackRangeStop;
-    public int exp_worth;
+    public int exp_worth = 400;
+    public int score_worth;
     protected bool Dead;
 
     //references
@@ -33,16 +34,18 @@ public class Heavy : MonoBehaviour
     public NavMeshAgent enemyAgent;
     public GameObject bullet;
     public GameObject bulletSpawnPoint;
+    public GameObject scoreManager;
     public SpriteRenderer sprite;
 
     // Start is called before the first frame update
     void Start()
     {
         playerTransform = GameObject.Find("Player").transform;
+        scoreManager = GameObject.Find("ScoreManager");
         //SpawnManager = GameObject.Find("SpawnManager").transform;
         curState = State.follow;
         Dead = false;
-
+        score_worth = exp_worth * 2;
         //Navmesh
         enemyAgent = GetComponent<NavMeshAgent>();
         enemyAgent.updateRotation = false;
@@ -118,6 +121,7 @@ public class Heavy : MonoBehaviour
     protected void UpdateDeadState()
     {
         playerTransform.gameObject.SendMessage("GiveEXP", (int)exp_worth);
+        scoreManager.GetComponent<ScoreManager>().AddToScore(score_worth);
         //SpawnManager.gameObject.SendMessage("reduceEnemy", (int)3);
         Destroy(gameObject);
     }

@@ -11,18 +11,9 @@ public class Controller : MonoBehaviour
         Application.Quit();
     }
     
-    public void PlayGame()
+    public void LoadLevel(string levelName) 
     {
-        SceneManager.LoadScene("PlayGame");
+        SceneManager.LoadScene(levelName);
     }
     
-    public void Configure()
-    {
-        SceneManager.LoadScene("Configure");
-    }
-    
-    public void MainMenu() 
-    {
-        SceneManager.LoadScene("MainMenu");
-    }
 }

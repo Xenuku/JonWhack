@@ -27,7 +27,7 @@ public class Controller : MonoBehaviour
         int finalKills = scoreManager.GetComponent<ScoreManager>().kills;
         int finalExperience = (int) player.GetComponent<PlayerController>().experience;
         PlayerPrefs.SetInt("score", finalScore);
-        PlayerPrefs.SetString("surived", "Survived");
+        PlayerPrefs.SetString("survived", "Survived");
         PlayerPrefs.SetInt("kills", finalKills);
         PlayerPrefs.SetInt("totalExp", finalExperience);
         SceneManager.LoadScene("GameOver");

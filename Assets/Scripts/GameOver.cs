@@ -28,7 +28,7 @@ public class GameOver : MonoBehaviour
     void Start()
     {
         score = PlayerPrefs.GetInt("score");
-        survived = PlayerPrefs.GetString("surived");
+        survived = PlayerPrefs.GetString("survived");
         kills = PlayerPrefs.GetInt("kills");
         totalExp = PlayerPrefs.GetInt("totalExp");
 

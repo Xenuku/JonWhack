@@ -17,7 +17,7 @@ public class ScoreManager : MonoBehaviour
     {
         // When the game starts, wipe all data from playerprefs
         PlayerPrefs.SetInt("score", 0);
-        PlayerPrefs.SetString("surived", "");
+        PlayerPrefs.SetString("survived", "");
         PlayerPrefs.SetInt("kills", 0);
         PlayerPrefs.SetInt("totalExp", 0);
         scoreText.text = "Score: " + score;

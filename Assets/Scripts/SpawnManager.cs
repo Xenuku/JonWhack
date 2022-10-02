@@ -10,6 +10,8 @@ public class SpawnManager : MonoBehaviour
     public int enemyNum;
 
     public GameObject[] EnemyTypes;
+    public GameObject[] BigEnemyTypes;
+
     public Transform[] spawnPoint;
 
     public int respawnTime;
@@ -46,14 +48,8 @@ public class SpawnManager : MonoBehaviour
 
         int ranEnemy = Random.Range(0, EnemyTypes.Length);
 
-        //randomX_1=Random.Range(Camera.main.transform.position.x-40.0f, Camera.main.transform.position.x-15.0f);
-        //randomX_2=Random.Range(Camera.main.transform.position.x+40.0f, Camera.main.transform.position.x+15.0f);
+        int boss=Random.Range(0,10);
 
-        //randomY_1=Random.Range(Camera.main.transform.position.y-40.0f, Camera.main.transform.position.y-15.0f);
-        //randomY_2=Random.Range(Camera.main.transform.position.y+40.0f, Camera.main.transform.position.y+15.0f);
-
-
-        //float randomX = Random.Range(Camera.main.transform.position.x-15.0f, Camera.main.transform.position.x+15.0f); 
 
         float randomX = Random.Range(Random.Range(Camera.main.transform.position.x - 50.0f, Camera.main.transform.position.x - 40.0f), Random.Range(Camera.main.transform.position.x + 50.0f, Camera.main.transform.position.x + 40.0f));
 
@@ -68,6 +64,12 @@ public class SpawnManager : MonoBehaviour
         {
             GameObject enemy = (GameObject)Instantiate(EnemyTypes[ranEnemy], new Vector2(randomX, randomY), Quaternion.identity);
             enemyNum += 1;
+        }
+        int ranBigEnemy= Random.Range(0,BigEnemyTypes.Length);
+        Debug.Log(boss);
+
+        if(enableSpawn &boss<3){
+            GameObject BigEnemy=    (GameObject)Instantiate(BigEnemyTypes[ranBigEnemy], new Vector2(randomX, randomY), Quaternion.identity);
         }
     }
     void AddSecond()

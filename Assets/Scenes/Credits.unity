@@ -446,7 +446,7 @@ MonoBehaviour:
     Say
     hello!
 
-    Email: wonwoo@choi.com
+    Email: wonwoo.choi@griffithuni.edu.au
 
     GitHub: 1wooch'
   m_isRightToLeft: 0
@@ -701,7 +701,7 @@ RectTransform:
   m_GameObject: {fileID: 852267236}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.9, y: 0.9, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1255932206}
@@ -732,7 +732,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: cdfe61753e46077c7ac51a1716403203, type: 3}
+  m_Sprite: {fileID: 21300000, guid: bb6a638ed94983c0f801f3c20ad6cb2b, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -1020,7 +1020,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 8e05e3c05ede58bc7ba14f08d8d01761, type: 3}
+  m_Sprite: {fileID: 21300000, guid: cdfe61753e46077c7ac51a1716403203, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -1766,7 +1766,7 @@ MonoBehaviour:
     Say
     hello!
 
-    Email: haonan@chi.com
+    Email: haonan.chi@griffithuni.edu.au
 
     GitHub: Kutoum'
   m_isRightToLeft: 0

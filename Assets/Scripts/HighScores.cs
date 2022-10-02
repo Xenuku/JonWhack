@@ -19,7 +19,7 @@ public class HighScores : MonoBehaviour
         UnityWebRequest uwr = UnityWebRequest.Get(uri);
         yield return uwr.SendWebRequest();
 
-        if (uwr.isNetworkError)
+        if (uwr.result == UnityWebRequest.Result.ConnectionError)
         {
             Debug.Log("Error while getting: " + uwr.error);
         } 

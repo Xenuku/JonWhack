@@ -7,7 +7,7 @@ using TMPro;
 public class ScoreManager : MonoBehaviour
 {
     public int score;
-    private int kills = 0;
+    public int kills = 0;
     public TMP_Text scoreText;
     public GameObject finishGame;
     public Button finishGameBtn;
@@ -15,6 +15,11 @@ public class ScoreManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        // When the game starts, wipe all data from playerprefs
+        PlayerPrefs.SetInt("score", 0);
+        PlayerPrefs.SetString("surived", "");
+        PlayerPrefs.SetInt("kills", 0);
+        PlayerPrefs.SetInt("totalExp", 0);
         scoreText.text = "Score: " + score;
     }
     void Awake() 

@@ -400,10 +400,12 @@ MonoBehaviour:
   moving: 0
   sprite: {fileID: 3754544099322314589}
   exp_worth: 150
+  score_worth: 0
   speed: 0
-  bullet: {fileID: 4589092044648749052, guid: 299a59c7581eed71ea0961e7e308b8b9, type: 3}
+  bullet: {fileID: 8259603303253518586, guid: 299a59c7581eed71ea0961e7e308b8b9, type: 3}
   bulletSpawnPoint: {fileID: 3754544099546442486}
   sniperRifle: {fileID: 3754544098397439681}
+  scoreManager: {fileID: 0}
 --- !u!1 &3754544099546442486
 GameObject:
   m_ObjectHideFlags: 0

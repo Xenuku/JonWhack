@@ -135,12 +135,12 @@ public class Heavy : MonoBehaviour
                 Vector2 direction = (Vector2)((playerTransform.position - transform.position));
                 direction.Normalize();
 
-                GameObject sniperBullet = (GameObject)Instantiate(
+                GameObject Bullet = (GameObject)Instantiate(
                                     bullet,
                                     bulletSpawnPoint.transform.position + (Vector3)(direction * 0.5f),
                                     Quaternion.identity);
 
-                sniperBullet.GetComponent<Rigidbody2D>().velocity = direction * 5.0f;
+                Bullet.GetComponent<Rigidbody2D>().velocity = direction * 5.0f;
             }
 
             timeElapsed = 0.0f;

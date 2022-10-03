@@ -1,15 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class Bullet : MonoBehaviour
 {
-    public int damage = 10;
-    public float speed = 10.0f;
-    public float lifeTime = 2.0f;
+    public int damage;
+    public float speed;
+    public float lifeTime;
     private Vector2 newPos;
 
     private GameObject slot1;
+
+    private Vector3Int contact;
 
     public enum EnemyTypes 
     {
@@ -17,6 +20,9 @@ public class Bullet : MonoBehaviour
         Sniper,
         Heavy,
         Player,
+        Wall,
+        Center,
+        Support,
     }
     private string enemyType;
 
@@ -35,25 +41,41 @@ public class Bullet : MonoBehaviour
     {
         enemyType = other.collider.gameObject.tag;
         switch(enemyType) {
+            case "Wall":
+                other.collider.gameObject.GetComponent<Wall>().health -= damage;
+                other.collider.gameObject.SendMessage("Flash");
+                Destroy(gameObject);
+                break;
+            case "Center":
+                other.collider.gameObject.GetComponent<Center>().health -= damage;
+                other.collider.gameObject.SendMessage("Flash");
+                Destroy(gameObject);
+                break;
+            case "Support":
+                // Will take 2 shots to kill
+                other.collider.gameObject.GetComponent<Support>().health -= damage;
+                other.collider.gameObject.SendMessage("Flash");
+                Destroy(gameObject);
+                break;
             case "Melee":
                 // Will take 2 shots to kill
-                other.collider.gameObject.GetComponent<MeleeEnemy>().health -= 10;
+                other.collider.gameObject.GetComponent<MeleeEnemy>().health -= damage;
                 other.collider.gameObject.SendMessage("Flash");
                 Destroy(gameObject);
                 break;
             case "Sniper":
                 // Will take 1 shot to kill
-                other.collider.gameObject.GetComponent<Sniper>().health -= 10;
+                other.collider.gameObject.GetComponent<Sniper>().health -= damage;
                 other.collider.gameObject.SendMessage("Flash");
                 Destroy(gameObject);
                 break;
             case "Heavy":
-                other.collider.gameObject.GetComponent<Heavy>().health -= 10;
+                other.collider.gameObject.GetComponent<Heavy>().health -= damage;
                 other.collider.gameObject.SendMessage("Flash");
                 Destroy(gameObject);
                 break;
             case "Player":
-                other.collider.gameObject.GetComponent<PlayerController>().health -= 5;
+                other.collider.gameObject.GetComponent<PlayerController>().health -= damage;
                 other.collider.gameObject.SendMessage("Flash");
                 Destroy(gameObject);
                 break;

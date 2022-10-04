@@ -13,20 +13,24 @@ public class SpawnManager : MonoBehaviour
 
     public Transform[] spawnPoint;
 
-    public int respawnTime = 15; //every 3 seconds
+    public int respawnTime = 5; 
     private int currentTime;
-    public int increaseRespawn = 30;
-    public int reset;
-    public int enemy_num_limit = 14;
+    public int increaseRespawn = 5;
+    //public int reset;
+    public int enemy_num_limit = 15;
     //public randomX_1;
 
 
     // Start is called before the first frame update
     void Start()
     {
+        respawnTime=1; //first spawn
+        increaseRespawn=5;
+        enemy_num_limit=30;
+
         currentTime = 0;
-        InvokeRepeating("AddSecond", 20f, 1f);
-        InvokeRepeating("SpawnSystem", 1f, 0.5f);
+        InvokeRepeating("AddSecond", 1f, 0.5f);
+        InvokeRepeating("SpawnSystem", 1f, 0.1f);
         //InvokeRepeating("manageEnemyNum",5f,1f);
         SpawnEnemy();
     }
@@ -35,6 +39,9 @@ public class SpawnManager : MonoBehaviour
     void Update()
     {
         manageEnemyNum();
+        //SpawnSystem();
+        
+
     }
     void SpawnEnemy()
     {
@@ -48,35 +55,54 @@ public class SpawnManager : MonoBehaviour
             enemyNum += 1;
         }
         int ranBigEnemy = Random.Range(0, BigEnemyTypes.Length);
-        Debug.Log(boss);
+
         if (enableSpawn & boss < 3)
         {
             GameObject BigEnemy = (GameObject)Instantiate(BigEnemyTypes[ranBigEnemy], new Vector2(randomX, randomY), Quaternion.identity);
+            enemyNum+=1;
+            
         }
     }
     void AddSecond()
     {
         currentTime += 1;
+
+        //Debug.Log(enemy_num_limit);
+        Debug.Log(enemyNum);
+
+
     }
     void SpawnSystem()
     {
-        if (Mathf.Floor(currentTime & respawnTime) == 0)
+        if (Mathf.Floor(currentTime % respawnTime) == 0)
         { //for respawn time
+            //Debug.Log("spawn enemy");
             SpawnEnemy();
         }
-        if (Mathf.Floor(currentTime & increaseRespawn) == 0)
-        {
-            respawnTime -= 1;
-            enemy_num_limit += 1;
-        }
-        if (Mathf.Floor(currentTime & reset) == 0)
-        {
-            respawnTime = 15;
-        }
+        if (Mathf.Floor(currentTime % increaseRespawn) == 0)
+        {   
 
+            if(respawnTime<2){
+            //Debug.Log("increase num enemy");
+
+            enemy_num_limit += 1;
+            respawnTime=7; //from second respawn
+            //Debug.Log(enemy_num_limit);
+
+            }else{
+            //Debug.Log("decrease respawn time");
+
+            respawnTime -= 1;
+           // Debug.Log(respawnTime);
+
+
+            }
+        }
+        
     }
     void manageEnemyNum()
     {
+       
         if (enemyNum > enemy_num_limit)
         {
             enableSpawn = false;

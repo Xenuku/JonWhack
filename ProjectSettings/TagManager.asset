@@ -16,6 +16,7 @@ TagManager:
   - Wall
   - Center
   - Status
+  - user_bullet
   layers:
   - Default
   - TransparentFX

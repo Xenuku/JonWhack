@@ -39,7 +39,7 @@ public class Sniper : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        speed = 1;
+        speed = 3f;
         playerTransform = GameObject.Find("Player").transform;
         SpawnManager = GameObject.Find("SpawnManager").transform;
         scoreManager = GameObject.Find("ScoreManager");
@@ -163,7 +163,7 @@ public class Sniper : MonoBehaviour
                                     bullet,
                                     bulletSpawnPoint.transform.position + (Vector3)(direction * 0.5f),
                                     Quaternion.identity);
-                sniperBullet.GetComponent<Rigidbody2D>().velocity = direction * 5.0f;
+                sniperBullet.GetComponent<Rigidbody2D>().velocity = direction * 20.0f;
             }
             elapsedTime = 0.0f;
         }

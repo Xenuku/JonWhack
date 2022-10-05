@@ -20,6 +20,7 @@ public class PlayerController : MonoBehaviour
     private Image healthBar;
     private Image expBar;
     public TMP_Text levelText;
+    public GameObject controller;
 
     //animation
     public Animator animator;
@@ -32,6 +33,7 @@ public class PlayerController : MonoBehaviour
         health = MAXHEALTH;
         healthBar = GameObject.Find("HealthBar").GetComponent<Image>();
         expBar = GameObject.Find("ExpBar").GetComponent<Image>();
+        controller = GameObject.Find("Controller");
     }
     // Update is called once per frame
     void Update()
@@ -48,6 +50,10 @@ public class PlayerController : MonoBehaviour
             GiveEXP(100);
             ApplyDamage(10);
         }
+
+        if (health <= 0) {
+            KillThePlayer();
+        }
     }
 
     void FixedUpdate() 
@@ -60,12 +66,17 @@ public class PlayerController : MonoBehaviour
 
 
         if (experience >= levelExpRequired) {
-            levelUp();
+            LevelUp();
         }
     }
 
+    void KillThePlayer() {
+        Debug.Log("DEAD!");
+        controller.GetComponent<Controller>().GameOver();
+    }
+
     // Perform a level up, increase the next levels required xp and update GUI
-    void levelUp() {
+    void LevelUp() {
         float startExp = 1000;
         float difficulty = 1.5f;
         level += 1;

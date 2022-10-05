@@ -140,7 +140,7 @@ public class Heavy : MonoBehaviour
                                     bulletSpawnPoint.transform.position + (Vector3)(direction * 0.5f),
                                     Quaternion.identity);
 
-                Bullet.GetComponent<Rigidbody2D>().velocity = direction * 5.0f;
+                Bullet.GetComponent<Rigidbody2D>().velocity = direction * 10.0f;
             }
 
             timeElapsed = 0.0f;

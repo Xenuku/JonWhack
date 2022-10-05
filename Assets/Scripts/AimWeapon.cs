@@ -8,7 +8,7 @@ public class AimWeapon : MonoBehaviour
     Vector3 mouseP;
     protected float elapsedTime;
     public GameObject pBullet;
-    public float shootRate = 0.5f;
+    public float shootRate = 0.3f;
     public float bulletSpeed = 30.0f;
     public GameObject endGunPoint;
     public Texture2D crosshair;

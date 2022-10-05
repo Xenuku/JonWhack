@@ -12,13 +12,13 @@ public class MeleeEnemy : MonoBehaviour
     public State curState;
     public GameObject Enemy;
     protected float elapsedTime;
-    public int health = 10;
+    public int health = 20;
     // ranges
     private Transform playerTransform;
     private Transform SpawnManager;
     // This enemy is worth 100 xp
     public int exp_worth = 100;
-    public int score_worth = 200;
+    public int score_worth;
     public SpriteRenderer sprite;
     public GameObject scoreManager;
     public enum State
@@ -32,7 +32,9 @@ public class MeleeEnemy : MonoBehaviour
 
     void Start()
     {
-        speed = 1;
+
+        score_worth = exp_worth * 2;
+        speed = 2f;
         playerTransform = GameObject.Find("Player").transform;
         SpawnManager = GameObject.Find("SpawnManager").transform;
         scoreManager = GameObject.Find("ScoreManager");
@@ -65,8 +67,9 @@ public class MeleeEnemy : MonoBehaviour
             curState = State.dead;
         }
         // flip sprite depending which way the enemy is walking
+        // + 1 to the players x to stop the melee enemy becoming a beyblade
         Vector3 localScale = new Vector3(0.25f, 0.28f, 1);
-        if (playerTransform.position.x >= transform.position.x)
+        if (playerTransform.position.x + 1 >= transform.position.x)
         {
             localScale.x = -0.25f;
         }

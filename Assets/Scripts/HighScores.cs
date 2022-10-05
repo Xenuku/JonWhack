@@ -25,7 +25,6 @@ public class HighScores : MonoBehaviour
         } 
         else
         {
-            //Debug.Log("Recieved: " + uwr.downloadHandler.text);
             string[] entries = uwr.downloadHandler.text.Split(new char[] {'\n'}, System.StringSplitOptions.RemoveEmptyEntries);
             string textBuilder = "";
             for (int i = 0; i < entries.Length; i++) {

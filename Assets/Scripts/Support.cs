@@ -60,6 +60,8 @@ public class Support : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        exp_worth = 300;
+        score_worth = exp_worth * 2;
         sword.SetActive(false);
         shield.SetActive(false);
 

@@ -51,29 +51,6 @@ public class Bullet : MonoBehaviour
                 other.collider.gameObject.SendMessage("Flash");
                 Destroy(gameObject);
                 break;
-            // case "Support":
-            //     // Will take 2 shots to kill
-            //     other.collider.gameObject.GetComponent<Support>().health -= damage;
-            //     other.collider.gameObject.SendMessage("Flash");
-            //     Destroy(gameObject);
-            //     break;
-            // case "Melee":
-            //     // Will take 2 shots to kill
-            //     other.collider.gameObject.GetComponent<MeleeEnemy>().health -= damage;
-            //     other.collider.gameObject.SendMessage("Flash");
-            //     Destroy(gameObject);
-            //     break;
-            // case "Sniper":
-            //     // Will take 1 shot to kill
-            //     other.collider.gameObject.GetComponent<Sniper>().health -= damage;
-            //     other.collider.gameObject.SendMessage("Flash");
-            //     Destroy(gameObject);
-            //     break;
-            // case "Heavy":
-            //     other.collider.gameObject.GetComponent<Heavy>().health -= damage;
-            //     other.collider.gameObject.SendMessage("Flash");
-            //     Destroy(gameObject);
-            //     break;
             case "Player":
                 other.collider.gameObject.GetComponent<PlayerController>().health -= damage;
                 other.collider.gameObject.SendMessage("Flash");

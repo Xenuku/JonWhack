@@ -241,6 +241,10 @@ public class Support : MonoBehaviour
         //SpawnManager.gameObject.SendMessage("reduceEnemy", (int)5);
         Destroy(sword.gameObject);
         Destroy(shield.gameObject);
+        Destroy(buildingSpawnPoint1.gameObject);
+        Destroy(buildingSpawnPoint2.gameObject);
+        Destroy(buildingSpawnPoint3.gameObject);
+        Destroy(buildingSpawnPoint4.gameObject);
         transform.DetachChildren();
         Destroy(gameObject);
     }

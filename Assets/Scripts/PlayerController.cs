@@ -17,16 +17,18 @@ public class PlayerController : MonoBehaviour
     public int level = 1;
     public float experience = 0.0f;
     private int levelExpRequired = 1000;
-    private Image healthBar;
-    private Image expBar;
-    public TMP_Text levelText;
-    public GameObject controller;
+
 
     //animation
     public Animator animator;
 
     //references
+    private Image healthBar;
+    private Image expBar;
+    public TMP_Text levelText;
     public SpriteRenderer sprite;
+    private GameObject controller;
+    Vector3 mousePos;
 
     public void Start ()
     {
@@ -44,9 +46,33 @@ public class PlayerController : MonoBehaviour
         movement.x = Input.GetAxisRaw("Horizontal");
         movement.y = Input.GetAxisRaw("Vertical");
 
+        if (movement.x != 0.0f || movement.y != 0.0f)
+        {
+            animator.SetBool("Idle", false);
+        }
+        else
+        {
+            animator.SetBool("Idle", true);
+        }
+
+        if (!PauseMenu.gameIsPaused || !UpgradeManager.upgradeScreenOpen)
+        {
+            mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+            if (mousePos.x >= transform.position.x)
+            {
+                sprite.flipX = false;
+            }
+            else
+            {
+                sprite.flipX = true;
+            }
+
+        }
+
         // For debugging, press space to take some damage and give yourself XP
         // So you can test the HP and EXP bars.
-        if(Input.GetKeyUp(KeyCode.Space)) {
+        if (Input.GetKeyUp(KeyCode.Space)) {
             GiveEXP(100);
             ApplyDamage(10);
         }
@@ -63,6 +89,10 @@ public class PlayerController : MonoBehaviour
                         moveSpeed * 
                         Time.fixedDeltaTime
                     );
+
+        
+
+        
 
 
         if (experience >= levelExpRequired) {

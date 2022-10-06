@@ -5,16 +5,14 @@ using UnityEngine.AI;
 public class Sniper : MonoBehaviour
 {
     public State curState;
-    public float shootRate = 3.0f;
+    public float shootRate;
     protected float elapsedTime;
-    public int health = 30;
+    public int health;
     // ranges
-    public float attackRange = 10.0f;
-    public float attackRangeStop = 5.0f;
-    public int moving = 0;
-    private Transform playerTransform;
-    private Transform SpawnManager;
-    public SpriteRenderer sprite;
+    public float attackRange;
+    public float attackRangeStop;
+    public bool enchantLooking = false;
+    private bool enchanted = false;
 
     // This enemy is worth 150 xp
     public int exp_worth = 150;
@@ -26,27 +24,37 @@ public class Sniper : MonoBehaviour
         dead,
     }
     State state;
-    public float speed;
     private float dist;
 
-    // Weapon related
+    //references
+    private Transform playerTransform;
+    private Transform SpawnManager;
+    public Transform centerTransform;
+    public SpriteRenderer sprite;
+    public Animator animator;
+    public GameObject Enhencedbullet;
     public GameObject bullet;
-    public GameObject bulletSpawnPoint;
-    public GameObject sniperRifle;
+    public GameObject bulletSpawnPoint;  
+    private GameObject scoreManager;
+    public GameObject sword;
+    public GameObject shield;
 
-    public GameObject scoreManager;
+    //AI
+    public UnityEngine.AI.NavMeshAgent enemyAgent;
 
     // Start is called before the first frame update
     void Start()
     {
-        speed = 3f;
         playerTransform = GameObject.Find("Player").transform;
         SpawnManager = GameObject.Find("SpawnManager").transform;
         scoreManager = GameObject.Find("ScoreManager");
         curState = State.follow;
         elapsedTime = 0.0f;
         score_worth = exp_worth * 2;
-        dist = Vector2.Distance(transform.position, playerTransform.position);
+        
+        enemyAgent = GetComponent<UnityEngine.AI.NavMeshAgent>();
+        enemyAgent.updateRotation = false;
+        enemyAgent.updateUpAxis = false;
 
         if (!playerTransform)
         {
@@ -61,8 +69,8 @@ public class Sniper : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        dist = Vector2.Distance(transform.position, playerTransform.position);
         elapsedTime += Time.deltaTime;
+
          // flip sprite depending which way the enemy is walking
         Vector3 bodyScale = new Vector3(0.04f, 0.04f, 0);
         if (playerTransform.position.x >= transform.position.x)
@@ -89,41 +97,33 @@ public class Sniper : MonoBehaviour
         {
             curState = State.dead;
         }
-        AimSniper();
     }
-
-    protected void AimSniper()
+    
+    protected void UpdateFollowState()
     {
-        // Aim sniper at player
-        Vector3 aimDirection = (playerTransform.position - transform.position).normalized;
-        float angle = Mathf.Atan2(aimDirection.y, aimDirection.x) * Mathf.Rad2Deg;
-        sniperRifle.transform.eulerAngles = new Vector3(0, 0, angle);
+        animator.SetBool("IsAttack", false);
 
-        Vector3 localScale = Vector3.one;
-        if (angle > 90 || angle < -90)
+        if (enchantLooking == true && enchanted == false)
         {
-            localScale.y = -1f;
-            localScale.x = -1f;
+            dist = Vector2.Distance(transform.position, centerTransform.position);
+            enemyAgent.SetDestination(centerTransform.position);
+
+            if (dist < 5.0f)
+            {
+                enchanted = true;
+                health += 50;
+                enemyAgent.speed = 5.0f;
+                sword.SetActive(true);
+                shield.SetActive(true);
+            }
+
         }
         else
         {
-            localScale.y = +1f;
-            localScale.x = +1f;
+            dist = Vector2.Distance(transform.position, playerTransform.position);
+            enemyAgent.SetDestination(playerTransform.position);
         }
-        sniperRifle.transform.localScale = localScale;
-    }
-    protected void UpdateFollowState()
-    {
-        if (playerTransform != null)
-        {
-            float dir = playerTransform.position.x - transform.position.x;
-            float ydir = playerTransform.position.y - transform.position.y;
 
-            dir = (dir < 0) ? -1 : 1;
-            ydir = (ydir < 0) ? -1 : 1;
-
-            transform.Translate(new Vector2(dir, ydir) * speed * Time.deltaTime);
-        }
         // Switch to attack if in range
         if (dist < attackRange)
         {
@@ -132,15 +132,22 @@ public class Sniper : MonoBehaviour
     }
     protected void UpdateAttackState()
     {
-        // Temp, need to change this with a red sprite eventually and draw properly
-        Debug.DrawLine(playerTransform.position, bulletSpawnPoint.transform.position, Color.red);        
+        dist = Vector2.Distance(transform.position, playerTransform.position);
+        animator.SetBool("IsAttack", true);
+       
+        if (enchanted == false)
+        {
+            ShootBullet();
+        }
+        else
+        {
+            SHOOTBULLET();
+        }
 
-        // Switch to follow if not in range to attack 
         if (dist > attackRange)
         {
             curState = State.follow;
         }
-        ShootBullet();
     }
 
     protected void UpdateDeadState()
@@ -159,15 +166,37 @@ public class Sniper : MonoBehaviour
             {
                 Vector2 direction = (Vector2)((playerTransform.position - transform.position));
                 direction.Normalize();
-                GameObject sniperBullet = (GameObject)Instantiate(
+                GameObject Bullet = (GameObject)Instantiate(
                                     bullet,
                                     bulletSpawnPoint.transform.position + (Vector3)(direction * 0.5f),
                                     Quaternion.identity);
-                sniperBullet.GetComponent<Rigidbody2D>().velocity = direction * 20.0f;
+                Bullet.GetComponent<Rigidbody2D>().velocity = direction * 20.0f;
             }
             elapsedTime = 0.0f;
         }
     }
+
+    private void SHOOTBULLET()
+    {
+        if (elapsedTime >= shootRate)
+        {
+            if ((bullet))
+            {
+                Vector2 direction = (Vector2)((playerTransform.position - transform.position));
+                direction.Normalize();
+
+                GameObject Bullet = (GameObject)Instantiate(
+                                    Enhencedbullet,
+                                    bulletSpawnPoint.transform.position + (Vector3)(direction * 0.5f),
+                                    Quaternion.identity);
+
+                Bullet.GetComponent<Rigidbody2D>().velocity = direction * 5.0f;
+            }
+
+            elapsedTime = 0.0f;
+        }
+    }
+
     public IEnumerator Flash()
     {
         sprite.color = Color.red;

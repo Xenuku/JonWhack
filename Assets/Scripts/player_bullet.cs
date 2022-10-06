@@ -9,14 +9,13 @@ public class player_bullet : MonoBehaviour
     public float speed;
     public float lifeTime;
     private Vector2 newPos;
-
-    private GameObject slot1;
+    public SpriteRenderer BulletSprite;
+    Vector3 mousePosition;
 
     private Vector3Int contact;
 
     public enum EnemyTypes 
     {
-        
         Melee,
         Sniper,
         Heavy,
@@ -29,6 +28,10 @@ public class player_bullet : MonoBehaviour
     void Start()
     {
         Destroy(gameObject, lifeTime);
+
+        //adjust Bullet animations
+        mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        BulletAimEnemies();
     }
 
     // Update is called once per frame
@@ -37,6 +40,17 @@ public class player_bullet : MonoBehaviour
         newPos = transform.position + transform.forward * speed * Time.deltaTime;
         transform.position = newPos;
     }
+    protected void BulletAimEnemies()
+    {
+        Vector3 aimDirection = (mousePosition - transform.position).normalized;
+        float angle = Mathf.Atan2(aimDirection.y, aimDirection.x) * Mathf.Rad2Deg;
+        transform.eulerAngles = new Vector3(0, 0, angle);
+
+        Vector3 localScale = new Vector3(0.05f, 0.05f, 0);
+
+        transform.localScale = localScale;
+    }
+
     private void OnCollisionEnter2D(Collision2D other)
     {
         enemyType = other.collider.gameObject.tag;

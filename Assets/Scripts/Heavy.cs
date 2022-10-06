@@ -42,10 +42,11 @@ public class Heavy : MonoBehaviour
     {
         playerTransform = GameObject.Find("Player").transform;
         scoreManager = GameObject.Find("ScoreManager");
-        //SpawnManager = GameObject.Find("SpawnManager").transform;
+        SpawnManager = GameObject.Find("SpawnManager").transform;
         curState = State.follow;
         Dead = false;
         score_worth = exp_worth * 2;
+
         //Navmesh
         enemyAgent = GetComponent<NavMeshAgent>();
         enemyAgent.updateRotation = false;
@@ -122,7 +123,7 @@ public class Heavy : MonoBehaviour
     {
         playerTransform.gameObject.SendMessage("GiveEXP", (int)exp_worth);
         scoreManager.GetComponent<ScoreManager>().AddToScore(score_worth);
-        //SpawnManager.gameObject.SendMessage("reduceEnemy", (int)3);
+        SpawnManager.gameObject.SendMessage("reduceEnemy", (int)3);
         Destroy(gameObject);
     }
 

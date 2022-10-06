@@ -12,15 +12,30 @@ public class MeleeEnemy : MonoBehaviour
     public State curState;
     public GameObject Enemy;
     protected float elapsedTime;
-    public int health = 20;
-    // ranges
-    private Transform playerTransform;
-    private Transform SpawnManager;
+    public int health;
+    public bool enchantLooking = false;
+    private bool enchanted = false;
+    private float dist;
+
+
     // This enemy is worth 100 xp
     public int exp_worth = 100;
     public int score_worth;
+
+
+    //references
+    public Transform centerTransform;
+    public Animator animator;
+    public GameObject sword;
+    public GameObject shield;
     public SpriteRenderer sprite;
     public GameObject scoreManager;
+    private Transform playerTransform;
+    private Transform SpawnManager;
+
+    //AI
+    public UnityEngine.AI.NavMeshAgent enemyAgent;
+
     public enum State
     {
         follow,
@@ -28,18 +43,21 @@ public class MeleeEnemy : MonoBehaviour
         dead,
     }
     State state;
-    public float speed;
 
     void Start()
     {
-
         score_worth = exp_worth * 2;
-        speed = 2f;
         playerTransform = GameObject.Find("Player").transform;
         SpawnManager = GameObject.Find("SpawnManager").transform;
         scoreManager = GameObject.Find("ScoreManager");
         curState = State.follow;
         elapsedTime = 0.0f;
+
+        enemyAgent = GetComponent<UnityEngine.AI.NavMeshAgent>();
+        enemyAgent.updateRotation = false;
+        enemyAgent.updateUpAxis = false;
+
+
         if (!playerTransform)
         {
             print("Player doesn't exist.. Please add one with Tag named 'Player'");
@@ -53,42 +71,77 @@ public class MeleeEnemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        elapsedTime += Time.deltaTime;
+
         switch (curState)
         {
+            case State.attack: UpdateAttackState(); break;
             case State.follow: UpdateChaseState(); break;
             case State.dead: UpdateDeadState(); break;
         }
-        // Always chasing player
-        UpdateChaseState();
-        elapsedTime += Time.deltaTime;
-        // Always want the enemies following and attacking
+        
+
+
         if (health <= 0)
         {
             curState = State.dead;
         }
-        // flip sprite depending which way the enemy is walking
-        // + 1 to the players x to stop the melee enemy becoming a beyblade
-        Vector3 localScale = new Vector3(0.25f, 0.28f, 1);
-        if (playerTransform.position.x + 1 >= transform.position.x)
+
+
+        Vector3 bodyScale = new Vector3(0.04f, 0.04f, 0);
+        if (playerTransform.position.x >= transform.position.x)
         {
-            localScale.x = -0.25f;
+            bodyScale.x = +0.04f;
         }
         else
         {
-            localScale.x = +0.25f;
+            bodyScale.x = -0.04f;
         }
-        transform.localScale = localScale;
+        transform.localScale = bodyScale;
+    }
+
+    protected void UpdateAttackState()
+    {
+        animator.SetBool("IsAttack", true);
+
+        dist = Vector2.Distance(transform.position, playerTransform.position);
+        enemyAgent.SetDestination(playerTransform.position);
+
+        if (dist > 1.0f)
+        {
+            curState = State.follow;
+        }
     }
 
     protected void UpdateChaseState()
     {
-        if (playerTransform != null)
+        animator.SetBool("IsAttack", false);
+
+        if (enchantLooking == true && enchanted == false)
         {
-            float dir = playerTransform.position.x - transform.position.x;
-            float ydir = playerTransform.position.y - transform.position.y;
-            dir = (dir < 0) ? -1 : 1;
-            ydir = (ydir < 0) ? -1 : 1;
-            transform.Translate(new Vector2(dir, ydir) * speed * Time.deltaTime);
+            dist = Vector2.Distance(transform.position, centerTransform.position);
+            enemyAgent.SetDestination(centerTransform.position);
+
+            if (dist < 5.0f)
+            {
+                enchanted = true;
+                health += 50;
+                enemyAgent.speed = 6.0f;
+                sword.SetActive(true);
+                shield.SetActive(true);
+            }
+
+        }
+        else
+        {
+            dist = Vector2.Distance(transform.position, playerTransform.position);
+            enemyAgent.SetDestination(playerTransform.position);
+        }
+
+        // Switch to attack if in range
+        if (dist <= 1.0f)
+        {
+            curState = State.attack;
         }
     }
 
@@ -106,14 +159,6 @@ public class MeleeEnemy : MonoBehaviour
         {
             other.gameObject.SendMessage("ApplyDamage", 1);
             other.gameObject.SendMessage("Flash");
-            speed = 0;
-        }
-    }
-    private void OnCollisionExit2D(Collision2D other)
-    {
-        if (other.collider.gameObject.tag == "Player")
-        {
-            speed = 1;
         }
     }
 

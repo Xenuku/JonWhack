@@ -14,6 +14,8 @@ public class AimWeapon : MonoBehaviour
     public Texture2D crosshair;
     private SpriteRenderer playerSprite;
 
+    public SpriteRenderer Gun;
+
 
     private void Awake()
     {
@@ -44,6 +46,7 @@ public class AimWeapon : MonoBehaviour
 
     private void HandleAim()
     {
+
         Vector3 aimDirection = (mouseP - transform.position).normalized;
         float angle = Mathf.Atan2(aimDirection.y, aimDirection.x) * Mathf.Rad2Deg;
         aimTransform.eulerAngles = new Vector3(0, 0, angle);
@@ -51,14 +54,13 @@ public class AimWeapon : MonoBehaviour
         Vector3 localScale = Vector3.one;
         if (angle > 90 || angle < -90)
         {
-            playerSprite.flipX = true;
-            localScale.y = -1f;
+            Gun.flipY = true;
         }
         else
         {
-            playerSprite.flipX = false;
-            localScale.y = +1f;
+            Gun.flipY = false;
         }
+        
         aimTransform.localScale = localScale;
     }
     

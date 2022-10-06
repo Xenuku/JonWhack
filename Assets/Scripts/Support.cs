@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.Tilemaps;
 
 public class Support : MonoBehaviour
 {
@@ -15,8 +14,6 @@ public class Support : MonoBehaviour
     }
     public State curState;
     private float dist;
-    private float enchantDist;
-    private Tilemap buildings;
 
     //system
     protected float timeElapsed = 99.0f;
@@ -40,7 +37,7 @@ public class Support : MonoBehaviour
     private Transform playerTransform;
     private Transform SpawnManager;
     public Transform centerTransform;
-    public GameObject scoreManager;
+    private GameObject scoreManager;
     public GameObject wall;
     public GameObject center;
     public GameObject buildingSpawnPoint1;
@@ -65,8 +62,9 @@ public class Support : MonoBehaviour
         sword.SetActive(false);
         shield.SetActive(false);
 
+        scoreManager = GameObject.Find("ScoreManager");
         playerTransform = GameObject.Find("Player").transform;
-        //SpawnManager = GameObject.Find("SpawnManager").transform;
+        SpawnManager = GameObject.Find("SpawnManager").transform;
         curState = State.follow;
 
         //Navmesh
@@ -240,7 +238,7 @@ public class Support : MonoBehaviour
     {
         playerTransform.gameObject.SendMessage("GiveEXP", (int)exp_worth);
         scoreManager.GetComponent<ScoreManager>().AddToScore(score_worth);
-        //SpawnManager.gameObject.SendMessage("reduceEnemy", (int)5);
+        SpawnManager.gameObject.SendMessage("reduceEnemy", (int)5);
         Destroy(sword.gameObject);
         Destroy(shield.gameObject);
         Destroy(buildingSpawnPoint1.gameObject);

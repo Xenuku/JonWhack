@@ -29,15 +29,18 @@ public class SpawnManager : MonoBehaviour
         enemy_num_limit=30;
 
         currentTime = 0;
-        InvokeRepeating("AddSecond", 1f, 0.5f);
-        InvokeRepeating("SpawnSystem", 1f, 0.1f);
+        InvokeRepeating("AddSecond", 0, 0.5f);
+        //InvokeRepeating("SpawnSystem", 0, 0.1f);
+        
         //InvokeRepeating("manageEnemyNum",5f,1f);
-        SpawnEnemy();
+        //SpawnEnemy();
     }
 
     // Update is called once per frame
     void Update()
     {
+        SpawnSystem();
+        
         manageEnemyNum();
         //SpawnSystem();
         
@@ -49,26 +52,31 @@ public class SpawnManager : MonoBehaviour
         int boss = Random.Range(0, 10);
         float randomX = Random.Range(Random.Range(Camera.main.transform.position.x - 50.0f, Camera.main.transform.position.x - 40.0f), Random.Range(Camera.main.transform.position.x + 50.0f, Camera.main.transform.position.x + 40.0f));
         float randomY = Random.Range(Random.Range(Camera.main.transform.position.y - 50.0f, Camera.main.transform.position.y - 40.0f), Random.Range(Camera.main.transform.position.y + 50.0f, Camera.main.transform.position.y + 40.0f));
-        if (enableSpawn)
-        {
-            GameObject enemy = (GameObject)Instantiate(EnemyTypes[ranEnemy], new Vector2(randomX, randomY), Quaternion.identity);
-            enemyNum += 1;
-        }
+        // if (enableSpawn)
+        // {
+        //     GameObject enemy = (GameObject)Instantiate(EnemyTypes[ranEnemy], new Vector2(randomX, randomY), Quaternion.identity);
+        //     enemyNum += 1;
+        // }
         int ranBigEnemy = Random.Range(0, BigEnemyTypes.Length);
-
-        if (enableSpawn & boss < 3)
-        {
-            GameObject BigEnemy = (GameObject)Instantiate(BigEnemyTypes[ranBigEnemy], new Vector2(randomX, randomY), Quaternion.identity);
-            enemyNum+=1;
-            
+        if(enableSpawn){
+            if ( boss < 3 )
+            {
+                GameObject BigEnemy = (GameObject)Instantiate(BigEnemyTypes[ranBigEnemy], new Vector2(randomX, randomY), Quaternion.identity);
+                enemyNum+=1;
+                
+            }else{
+                GameObject enemy = (GameObject)Instantiate(EnemyTypes[ranEnemy], new Vector2(randomX, randomY), Quaternion.identity);
+                enemyNum += 1;
+            }
         }
+        Debug.Log(enemyNum);
+
     }
     void AddSecond()
     {
         currentTime += 1;
 
         //Debug.Log(enemy_num_limit);
-        Debug.Log(enemyNum);
 
 
     }
@@ -114,6 +122,7 @@ public class SpawnManager : MonoBehaviour
     }
     void reduceEnemy(int die)
     {
+        //Debug.Log("reduceEnemy ");
         enemyNum -= die;
     }
 

@@ -19,7 +19,7 @@ public class Controller : MonoBehaviour
     }
     
     // When the user actively *presses* the complete mission button
-    public void GameOver() 
+    public void GameOver(string survived) 
     {
         scoreManager = GameObject.Find("ScoreManager");
         player = GameObject.Find("Player");
@@ -27,7 +27,7 @@ public class Controller : MonoBehaviour
         int finalKills = scoreManager.GetComponent<ScoreManager>().kills;
         int finalExperience = (int) player.GetComponent<PlayerController>().experience;
         PlayerPrefs.SetInt("score", finalScore);
-        PlayerPrefs.SetString("survived", "Survived");
+        PlayerPrefs.SetString("survived", survived);
         PlayerPrefs.SetInt("kills", finalKills);
         PlayerPrefs.SetInt("totalExp", finalExperience);
         SceneManager.LoadScene("GameOver");

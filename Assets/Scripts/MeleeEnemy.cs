@@ -17,7 +17,6 @@ public class MeleeEnemy : MonoBehaviour
     private bool enchanted = false;
     private float dist;
 
-
     // This enemy is worth 100 xp
     public int exp_worth = 100;
     public int score_worth;
@@ -79,14 +78,11 @@ public class MeleeEnemy : MonoBehaviour
             case State.follow: UpdateChaseState(); break;
             case State.dead: UpdateDeadState(); break;
         }
-        
-
 
         if (health <= 0)
         {
             curState = State.dead;
         }
-
 
         Vector3 bodyScale = new Vector3(0.04f, 0.04f, 0);
         if (playerTransform.position.x >= transform.position.x)

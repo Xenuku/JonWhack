@@ -12,13 +12,15 @@ public class PlayerController : MonoBehaviour
     public Rigidbody2D rb;
     public float moveSpeed = 5f;
     private Vector2 movement;
-    private const float MAXHEALTH = 100f;
+    public float maxHealth = 100f;
     public float health;
     public int level = 1;
+    public int damage;
+    public float bulletSpeed;
+    public float bonusScore;
+    public float fireRate;
     public float experience = 0.0f;
     private int levelExpRequired = 1000;
-
-
     //animation
     public Animator animator;
 
@@ -32,7 +34,7 @@ public class PlayerController : MonoBehaviour
 
     public void Start ()
     {
-        health = MAXHEALTH;
+        health = maxHealth;
         healthBar = GameObject.Find("HealthBar").GetComponent<Image>();
         expBar = GameObject.Find("ExpBar").GetComponent<Image>();
         controller = GameObject.Find("Controller");
@@ -42,7 +44,7 @@ public class PlayerController : MonoBehaviour
     {
         float curExp = (float)experience;
         expBar.fillAmount = curExp / levelExpRequired;
-        healthBar.fillAmount = health / MAXHEALTH;
+        healthBar.fillAmount = health / maxHealth;
         movement.x = Input.GetAxisRaw("Horizontal");
         movement.y = Input.GetAxisRaw("Vertical");
 
@@ -89,20 +91,13 @@ public class PlayerController : MonoBehaviour
                         moveSpeed * 
                         Time.fixedDeltaTime
                     );
-
-        
-
-        
-
-
         if (experience >= levelExpRequired) {
             LevelUp();
         }
     }
 
     void KillThePlayer() {
-        Debug.Log("DEAD!");
-        controller.GetComponent<Controller>().GameOver();
+        controller.GetComponent<Controller>().GameOver("KIA");
     }
 
     // Perform a level up, increase the next levels required xp and update GUI
@@ -111,12 +106,15 @@ public class PlayerController : MonoBehaviour
         float difficulty = 1.5f;
         level += 1;
         float curLevel = (float)level;
-        print("Level up!");
         experience = 0;
-        
+        // Stat increases
+        health = maxHealth; // Heal the player on level up
+        damage += 1;
+        moveSpeed += 0.1f;
+        // Gui Changes
         levelText.text = "Lv. " + level;
+        // New XP required
         levelExpRequired = Mathf.FloorToInt(startExp * Mathf.Pow(curLevel, difficulty));
-        print(levelExpRequired);
     }
 
     void ApplyDamage(int damage) {
@@ -127,12 +125,6 @@ public class PlayerController : MonoBehaviour
     // On Enemy death, they will send this to us to trigger XP for Jon
     void GiveEXP(int exp) {
         experience += exp;
-    }
-
-    public void Test(int testint){
-
-        Debug.Log(testint);
-        
     }
 
     public IEnumerator Flash()

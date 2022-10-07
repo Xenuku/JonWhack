@@ -13,7 +13,7 @@ public class AimWeapon : MonoBehaviour
     public GameObject endGunPoint;
     public Texture2D crosshair;
     private SpriteRenderer playerSprite;
-
+    public GameObject player;
     public SpriteRenderer Gun;
     public SpriteRenderer Hand1;
     public SpriteRenderer Hand2;
@@ -38,6 +38,7 @@ public class AimWeapon : MonoBehaviour
 
     private void Update()
     {
+        shootRate = player.GetComponent<PlayerController>().fireRate;
         if (!PauseMenu.gameIsPaused || !UpgradeManager.upgradeScreenOpen) {
             mouseP = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             HandleAim();

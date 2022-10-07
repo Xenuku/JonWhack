@@ -8,10 +8,13 @@ public class ScoreManager : MonoBehaviour
 {
     public int score;
     public int kills = 0;
+    public int difficulty = 1;
     public TMP_Text scoreText;
     public GameObject finishGame;
     public Button finishGameBtn;
     private Color originalColor;
+    private bool bonusScore = false;
+    public GameObject upgradeManager;
     // Start is called before the first frame update
     void Start()
     {
@@ -30,6 +33,7 @@ public class ScoreManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        bonusScore = upgradeManager.GetComponent<UpgradeManager>().bonusScore;
         scoreText.text = "Score: " + score;
         if (score >= 25000)
         {
@@ -41,7 +45,13 @@ public class ScoreManager : MonoBehaviour
     // Add to the score the amount from a kill, and increase the kill counter
     public void AddToScore(int amount) 
     {
-        score += amount;
+        // If the player is using the handgun, apply an 800 bonus
+        if(bonusScore) {
+            score += amount + 800;
+        } else {
+            score += amount;
+        }
+        
         kills += 1;
     }
 

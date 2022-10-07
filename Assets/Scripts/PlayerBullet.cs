@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class player_bullet : MonoBehaviour
+public class PlayerBullet : MonoBehaviour
 {
     public int damage;
     public float speed;
@@ -11,7 +11,7 @@ public class player_bullet : MonoBehaviour
     private Vector2 newPos;
     public SpriteRenderer BulletSprite;
     Vector3 mousePosition;
-
+    public GameObject player;
     private Vector3Int contact;
     private Transform BulletSpawnPoint;
 
@@ -29,7 +29,10 @@ public class player_bullet : MonoBehaviour
     void Start()
     {
         Destroy(gameObject, lifeTime);
-
+        // Get the damage value from the player
+        player = GameObject.Find("Player");
+        damage = player.GetComponent<PlayerController>().damage;
+        speed  = player.GetComponent<PlayerController>().bulletSpeed;
         //adjust Bullet animations
         BulletSpawnPoint = transform.Find("GunEndPoint");
         mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -68,19 +71,16 @@ public class player_bullet : MonoBehaviour
                 Destroy(gameObject);
                 break;
             case "Support":
-                // Will take 2 shots to kill
                 other.collider.gameObject.GetComponent<Support>().health -= damage;
                 other.collider.gameObject.SendMessage("Flash");
                 Destroy(gameObject);
                 break;
             case "Melee":
-                // Will take 2 shots to kill
                 other.collider.gameObject.GetComponent<MeleeEnemy>().health -= damage;
                 other.collider.gameObject.SendMessage("Flash");
                 Destroy(gameObject);
                 break;
             case "Sniper":
-                // Will take 1 shot to kill
                 other.collider.gameObject.GetComponent<Sniper>().health -= damage;
                 other.collider.gameObject.SendMessage("Flash");
                 Destroy(gameObject);

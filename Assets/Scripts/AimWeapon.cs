@@ -15,6 +15,8 @@ public class AimWeapon : MonoBehaviour
     private SpriteRenderer playerSprite;
 
     public SpriteRenderer Gun;
+    public SpriteRenderer Hand1;
+    public SpriteRenderer Hand2;
 
 
     private void Awake()

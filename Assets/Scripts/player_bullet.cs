@@ -13,6 +13,7 @@ public class player_bullet : MonoBehaviour
     Vector3 mousePosition;
 
     private Vector3Int contact;
+    private Transform BulletSpawnPoint;
 
     public enum EnemyTypes 
     {
@@ -30,6 +31,7 @@ public class player_bullet : MonoBehaviour
         Destroy(gameObject, lifeTime);
 
         //adjust Bullet animations
+        BulletSpawnPoint = transform.Find("GunEndPoint");
         mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         BulletAimEnemies();
     }

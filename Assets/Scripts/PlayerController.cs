@@ -48,11 +48,11 @@ public class PlayerController : MonoBehaviour
 
         if (movement.x != 0.0f || movement.y != 0.0f)
         {
-            animator.SetBool("Idle", false);
+            animator.SetBool("IsWalking", true);
         }
         else
         {
-            animator.SetBool("Idle", true);
+            animator.SetBool("IsWalking", false);
         }
 
         if (!PauseMenu.gameIsPaused || !UpgradeManager.upgradeScreenOpen)

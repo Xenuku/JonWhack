@@ -294,16 +294,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curState: 0
   Enemy: {fileID: 6656840251626898605}
-  health: 25
+  health: 20
   enchantLooking: 0
   exp_worth: 100
   score_worth: 0
-  sprite: {fileID: 6656840251626898602}
-  scoreManager: {fileID: 0}
-  centerTransform: {fileID: 0}
+  centerTransform: {x: 0, y: 0, z: 0}
   animator: {fileID: 6656840251626898606}
   sword: {fileID: 6656840251468578221}
   shield: {fileID: 6656840251349569260}
+  sprite: {fileID: 6656840251626898602}
+  scoreManager: {fileID: 0}
   enemyAgent: {fileID: 6656840251626898596}
 --- !u!70 &6656840251626898607
 CapsuleCollider2D:

@@ -45,9 +45,9 @@ public class ScoreManager : MonoBehaviour
     // Add to the score the amount from a kill, and increase the kill counter
     public void AddToScore(int amount) 
     {
-        // If the player is using the handgun, apply an 800 bonus
+        // If the player is using the handgun, apply an 400 bonus
         if(bonusScore) {
-            score += amount + 800;
+            score += amount + 400;
         } else {
             score += amount;
         }

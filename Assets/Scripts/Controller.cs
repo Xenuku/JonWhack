@@ -7,6 +7,8 @@ public class Controller : MonoBehaviour
 {
     public GameObject scoreManager;
     public GameObject player;
+    public GameObject howToPanel;
+
     public void QuitGame()
     {
         Debug.Log("Quit button pressed");
@@ -17,8 +19,16 @@ public class Controller : MonoBehaviour
     {
         SceneManager.LoadScene(levelName);
     }
-    
-    // When the user actively *presses* the complete mission button
+
+    public void ShowHideHelp(string showHide) {
+        if(showHide == "Show") {
+            howToPanel.SetActive(true);
+        } else {
+            howToPanel.SetActive(false);
+        }
+    }
+
+    // Store player stats for the gameover screen
     public void GameOver(string survived) 
     {
         scoreManager = GameObject.Find("ScoreManager");

@@ -109,8 +109,8 @@ public class PlayerController : MonoBehaviour
         experience = 0;
         // Stat increases
         health = maxHealth; // Heal the player on level up
-        damage += 1;
-        moveSpeed += 0.1f;
+        damage += 2;
+        moveSpeed += 0.2f;
         // Gui Changes
         levelText.text = "Lv. " + level;
         // New XP required

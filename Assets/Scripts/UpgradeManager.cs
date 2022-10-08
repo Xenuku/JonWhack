@@ -28,14 +28,14 @@ public class UpgradeManager : MonoBehaviour
     public void showScreen() 
     {
         Time.timeScale = 0;
-        upgradeScreenOpen = !upgradeScreenOpen;
+        upgradeScreenOpen = true;
         upgradeScreen.SetActive(true);
     }
 
     public void hideScreen()
     {
         Time.timeScale = 1;
-        upgradeScreenOpen = !upgradeScreenOpen;
+        upgradeScreenOpen = false;
         upgradeScreen.SetActive(false);
     }
 

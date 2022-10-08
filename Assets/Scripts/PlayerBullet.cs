@@ -91,7 +91,11 @@ public class PlayerBullet : MonoBehaviour
                 other.collider.gameObject.SendMessage("Flash");
                 Destroy(gameObject);
                 break;
-
+            case "Captain":
+                other.collider.gameObject.GetComponent<Captain>().health -= damage;
+                other.collider.gameObject.SendMessage("Flash");
+                Destroy(gameObject);
+                break;
             case "AirSupport":
                 other.collider.gameObject.GetComponent<AirSupport>().health -= damage;
                 other.collider.gameObject.SendMessage("Flash");

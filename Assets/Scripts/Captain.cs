@@ -38,6 +38,7 @@ public class Captain : MonoBehaviour
     private Transform hire1;
     private Transform hire2;
     private Transform hire3;
+    public SpriteRenderer sprite;
 
 
     // Start is called before the first frame update
@@ -184,7 +185,11 @@ public class Captain : MonoBehaviour
             hire3.GetComponent<Support>().health += 60;
             hire3.GetComponent<Support>().battlePosition = AttackSlot3.transform.position;
         }
-
-
+    }
+     public IEnumerator Flash()
+    {
+        sprite.color = Color.red;
+        yield return new WaitForSeconds(0.1f);
+        sprite.color = Color.white;
     }
 }

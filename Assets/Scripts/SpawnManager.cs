@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class SpawnManager : MonoBehaviour
 {
@@ -28,6 +29,8 @@ public class SpawnManager : MonoBehaviour
 
     //references
     public GameObject player;
+
+    public TMP_Text difficultyText;
 
     public enum State
     {
@@ -80,7 +83,7 @@ public class SpawnManager : MonoBehaviour
     {
         addNormal = 0;
         addElite = 0;
-
+        difficultyText.text = "Threat Level: <color=\"green\">Low</color>";
         SpawnEnemy();
     }
 
@@ -88,7 +91,7 @@ public class SpawnManager : MonoBehaviour
     {
         addNormal = 10;
         addElite = 3;
-
+        difficultyText.text = "Threat Level: <color=\"orange\">Medium</color>";
         SpawnEnemy();
     }
 
@@ -96,7 +99,7 @@ public class SpawnManager : MonoBehaviour
     {
         addNormal = 20;
         addElite = 6;
-
+        difficultyText.text = "Threat Level: <color=\"red\">High</color>";
         SpawnEnemy();
         SpawnCaptain();
     }
@@ -105,7 +108,7 @@ public class SpawnManager : MonoBehaviour
     {
         addNormal = 30;
         addElite = 9;
-
+        difficultyText.text = "Threat Level: <color=#5b4965>Midnight</color>";
         SpawnEnemy();
         SpawnCaptain();
     }

@@ -103,7 +103,7 @@ public class PlayerController : MonoBehaviour
     // Perform a level up, increase the next levels required xp and update GUI
     void LevelUp() {
         float startExp = 1000;
-        float difficulty = 1.5f;
+        float difficulty = 1.4f;
         level += 1;
         float curLevel = (float)level;
         experience = 0;

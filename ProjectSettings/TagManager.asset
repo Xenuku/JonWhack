@@ -17,6 +17,7 @@ TagManager:
   - Center
   - Status
   - user_bullet
+  - AirSupport
   layers:
   - Default
   - TransparentFX

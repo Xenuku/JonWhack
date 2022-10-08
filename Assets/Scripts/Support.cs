@@ -11,6 +11,7 @@ public class Support : MonoBehaviour
         follow,
         attack,
         dead,
+        hired,
     }
     public State curState;
     private float dist;
@@ -32,11 +33,13 @@ public class Support : MonoBehaviour
     private bool enchanted = false;
     private Vector3 destination;
     private Vector3 locations;
+    public bool hired = false;
+    public Vector2 battlePosition;
 
     //references
     private Transform playerTransform;
-    private Transform SpawnManager;
-    public Transform centerTransform;
+    private GameObject SpawnManager;
+    public Vector3 centerTransform;
     private GameObject scoreManager;
     public GameObject wall;
     public GameObject center;
@@ -64,7 +67,7 @@ public class Support : MonoBehaviour
 
         scoreManager = GameObject.Find("ScoreManager");
         playerTransform = GameObject.Find("Player").transform;
-        SpawnManager = GameObject.Find("SpawnManager").transform;
+        SpawnManager = GameObject.Find("SpawnManager");
         curState = State.follow;
 
         //Navmesh
@@ -107,11 +110,41 @@ public class Support : MonoBehaviour
             case State.follow: UpdateFollowState(); break;
             case State.dead: UpdateDeadState(); break;
             case State.attack: UpdateAttackState(); break;
+            case State.hired: UpdateHiredState(); break;
+        }
+
+        if (hired == true)
+        {
+            curState = State.hired;
         }
 
         if (health <= 0)
         {
             curState = State.dead;
+        }
+    }
+
+    protected void UpdateHiredState()
+    {
+        dist = Vector2.Distance(transform.position, battlePosition);
+        enemyAgent.SetDestination(battlePosition);
+        enemyAgent.stoppingDistance = 1.0f;
+
+        if (setup == false)
+        {
+            SetBuildings();
+        }
+        else
+        {
+            if (dist >= 1.0f)
+            {
+                animator.SetBool("IsAttack", false);
+            }
+            else
+            {
+                animator.SetBool("IsAttack", true);
+                SHOOTBULLET();
+            }
         }
     }
 
@@ -121,10 +154,10 @@ public class Support : MonoBehaviour
 
         if (enchantLooking == true && enchanted == false)
         {
-            dist = Vector2.Distance(transform.position, centerTransform.position);
-            enemyAgent.SetDestination(centerTransform.position);
+            dist = Vector2.Distance(transform.position, centerTransform);
+            enemyAgent.SetDestination(centerTransform);
             
-            if (dist < 5.0f)
+            if (dist <= 5.0f)
             {
                 enchanted = true;
                 health += 50;
@@ -238,7 +271,8 @@ public class Support : MonoBehaviour
     {
         playerTransform.gameObject.SendMessage("GiveEXP", (int)exp_worth);
         scoreManager.GetComponent<ScoreManager>().AddToScore(score_worth);
-        SpawnManager.gameObject.SendMessage("reduceEnemy", (int)5);
+        SpawnManager.GetComponent<SpawnManager>().curEliteNum -= 1;
+
         Destroy(sword.gameObject);
         Destroy(shield.gameObject);
         Destroy(buildingSpawnPoint1.gameObject);

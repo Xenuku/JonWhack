@@ -11,6 +11,7 @@ public class Heavy : MonoBehaviour
         follow,
         attack,
         dead,
+        hired,
     }
     public State curState;
     private float dist;
@@ -26,23 +27,31 @@ public class Heavy : MonoBehaviour
     public int exp_worth = 400;
     public int score_worth;
     protected bool Dead;
+    public bool enchantLooking = false;
+    private bool enchanted = false;
+    public Vector3 centerTransform;
+    public bool hired = false;
+    public Vector2 battlePosition;
 
     //references
     private Transform playerTransform;
-    private Transform SpawnManager;
+    private GameObject SpawnManager;
     public Animator animator;
     public NavMeshAgent enemyAgent;
     public GameObject bullet;
     public GameObject bulletSpawnPoint;
     public GameObject scoreManager;
     public SpriteRenderer sprite;
+    public GameObject sword;
+    public GameObject shield;
+    public GameObject Enhencedbullet;
 
     // Start is called before the first frame update
     void Start()
     {
         playerTransform = GameObject.Find("Player").transform;
         scoreManager = GameObject.Find("ScoreManager");
-        SpawnManager = GameObject.Find("SpawnManager").transform;
+        SpawnManager = GameObject.Find("SpawnManager");
         curState = State.follow;
         Dead = false;
         score_worth = exp_worth * 2;
@@ -66,7 +75,6 @@ public class Heavy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        dist = Vector2.Distance(transform.position, playerTransform.position);
         timeElapsed += Time.deltaTime;
 
         Vector3 bodyScale = new Vector3(0.04f, 0.04f, 0);
@@ -85,6 +93,12 @@ public class Heavy : MonoBehaviour
             case State.follow: UpdateFollowState(); break;
             case State.dead: UpdateDeadState(); break;
             case State.attack: UpdateAttackState(); break;
+            case State.hired: UpdateHiredState(); break;
+        }
+
+        if (hired == true)
+        {
+            curState = State.hired;
         }
 
         if (health <= 0)
@@ -93,11 +107,45 @@ public class Heavy : MonoBehaviour
         }
     }
 
-    protected void UpdateFollowState()
+    protected void UpdateHiredState()
     {
-        if (playerTransform != null)
+        dist = Vector2.Distance(transform.position, battlePosition);
+        enemyAgent.SetDestination(battlePosition);
+        enemyAgent.stoppingDistance = 1.0f;
+
+        if (dist >= 1.0f)
         {
             animator.SetBool("IsAttack", false);
+        }
+        else
+        {
+            animator.SetBool("IsAttack", true);
+            SHOOTBULLET();
+        }
+    }
+
+    protected void UpdateFollowState()
+    {
+        animator.SetBool("IsAttack", false);
+
+        if (enchantLooking == true && enchanted == false)
+        {
+            dist = Vector2.Distance(transform.position, centerTransform);
+            enemyAgent.SetDestination(centerTransform);
+
+            if (dist <= 5.0f)
+            {
+                enchanted = true;
+                health += 100;
+                enemyAgent.speed = 6.0f;
+                sword.SetActive(true);
+                shield.SetActive(true);
+            }
+
+        }
+        else
+        {
+            dist = Vector2.Distance(transform.position, playerTransform.position);
             enemyAgent.SetDestination(playerTransform.position);
         }
         // Switch to attack if in range
@@ -109,9 +157,18 @@ public class Heavy : MonoBehaviour
 
     protected void UpdateAttackState()
     {
+        dist = Vector2.Distance(transform.position, playerTransform.position);
         animator.SetBool("IsAttack", true);
 
-        ShootBullet();
+
+        if (enchanted == false)
+        {
+            ShootBullet();
+        }
+        else
+        {
+            SHOOTBULLET();
+        }
 
         if (dist > attackRange)
         {
@@ -123,7 +180,7 @@ public class Heavy : MonoBehaviour
     {
         playerTransform.gameObject.SendMessage("GiveEXP", (int)exp_worth);
         scoreManager.GetComponent<ScoreManager>().AddToScore(score_worth);
-        SpawnManager.gameObject.SendMessage("reduceEnemy", (int)3);
+        SpawnManager.GetComponent<SpawnManager>().curEliteNum -= 1;
         Destroy(gameObject);
     }
 
@@ -142,6 +199,27 @@ public class Heavy : MonoBehaviour
                                     Quaternion.identity);
 
                 Bullet.GetComponent<Rigidbody2D>().velocity = direction * 10.0f;
+            }
+
+            timeElapsed = 0.0f;
+        }
+    }
+
+    private void SHOOTBULLET()
+    {
+        if (timeElapsed >= shootRate)
+        {
+            if ((bullet))
+            {
+                Vector2 direction = (Vector2)((playerTransform.position - transform.position));
+                direction.Normalize();
+
+                GameObject Bullet = (GameObject)Instantiate(
+                                    Enhencedbullet,
+                                    bulletSpawnPoint.transform.position + (Vector3)(direction * 0.5f),
+                                    Quaternion.identity);
+
+                Bullet.GetComponent<Rigidbody2D>().velocity = direction * 5.0f;
             }
 
             timeElapsed = 0.0f;

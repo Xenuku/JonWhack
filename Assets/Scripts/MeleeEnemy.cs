@@ -16,6 +16,7 @@ public class MeleeEnemy : MonoBehaviour
     public bool enchantLooking = false;
     private bool enchanted = false;
     private float dist;
+    private Vector2 dashPosition;
 
     // This enemy is worth 100 xp
     public int exp_worth = 100;
@@ -23,14 +24,14 @@ public class MeleeEnemy : MonoBehaviour
 
 
     //references
-    public Transform centerTransform;
+    public Vector3 centerTransform;
     public Animator animator;
     public GameObject sword;
     public GameObject shield;
     public SpriteRenderer sprite;
     public GameObject scoreManager;
     private Transform playerTransform;
-    private Transform SpawnManager;
+    private GameObject SpawnManager;
 
     //AI
     public UnityEngine.AI.NavMeshAgent enemyAgent;
@@ -47,7 +48,7 @@ public class MeleeEnemy : MonoBehaviour
     {
         score_worth = exp_worth * 2;
         playerTransform = GameObject.Find("Player").transform;
-        SpawnManager = GameObject.Find("SpawnManager").transform;
+        SpawnManager = GameObject.Find("SpawnManager");
         scoreManager = GameObject.Find("ScoreManager");
         curState = State.follow;
         elapsedTime = 0.0f;
@@ -98,12 +99,33 @@ public class MeleeEnemy : MonoBehaviour
 
     protected void UpdateAttackState()
     {
-        animator.SetBool("IsAttack", true);
+        if (elapsedTime >= 10.0f)
+        {
+            animator.SetBool("Dash", true);
+            enemyAgent.SetDestination(playerTransform.position);
+            enemyAgent.speed = 20.0f;
+            enemyAgent.acceleration = 10.0f;
 
-        dist = Vector2.Distance(transform.position, playerTransform.position);
-        enemyAgent.SetDestination(playerTransform.position);
 
-        if (dist > 1.0f)
+            if (elapsedTime >= 12.5f)
+            {
+                animator.SetBool("Dash", false);
+                animator.SetBool("Cooldown", true);
+                enemyAgent.speed = 0.0f;
+                enemyAgent.SetDestination(playerTransform.position);
+                elapsedTime = 0.0f;
+            }
+        }
+
+        if (elapsedTime >= 2.0f && elapsedTime < 10.0f)
+        {
+            animator.SetBool("Cooldown", false);
+            enemyAgent.SetDestination(playerTransform.position);
+            enemyAgent.speed = 4.0f;
+            enemyAgent.acceleration = 8.0f;
+        }
+
+        if (dist > 10.0f)
         {
             curState = State.follow;
         }
@@ -111,18 +133,15 @@ public class MeleeEnemy : MonoBehaviour
 
     protected void UpdateChaseState()
     {
-        animator.SetBool("IsAttack", false);
-
         if (enchantLooking == true && enchanted == false)
         {
-            dist = Vector2.Distance(transform.position, centerTransform.position);
-            enemyAgent.SetDestination(centerTransform.position);
+            dist = Vector2.Distance(transform.position, centerTransform);
+            enemyAgent.SetDestination(centerTransform);
 
-            if (dist < 5.0f)
+            if (dist <= 5.0f)
             {
                 enchanted = true;
                 health += 50;
-                enemyAgent.speed = 6.0f;
                 sword.SetActive(true);
                 shield.SetActive(true);
             }
@@ -135,9 +154,10 @@ public class MeleeEnemy : MonoBehaviour
         }
 
         // Switch to attack if in range
-        if (dist <= 1.0f)
+        if (dist <= 10.0f)
         {
             curState = State.attack;
+            elapsedTime = Random.Range(0.0f, 9.0f);
         }
     }
 
@@ -145,7 +165,7 @@ public class MeleeEnemy : MonoBehaviour
     {
         playerTransform.gameObject.SendMessage("GiveEXP", (int)exp_worth);
         scoreManager.GetComponent<ScoreManager>().AddToScore(score_worth);
-        SpawnManager.gameObject.SendMessage("reduceEnemy", (int)1);
+        SpawnManager.GetComponent<SpawnManager>().curEnemyNum -= 1;
         Destroy(gameObject);
     }
 

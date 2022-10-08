@@ -13,6 +13,7 @@ public class Sniper : MonoBehaviour
     public float attackRangeStop;
     public bool enchantLooking = false;
     private bool enchanted = false;
+    public bool hired = false;
 
     // This enemy is worth 150 xp
     public int exp_worth = 150;
@@ -22,14 +23,16 @@ public class Sniper : MonoBehaviour
         follow,
         attack,
         dead,
+        hired,
     }
     State state;
     private float dist;
 
     //references
     private Transform playerTransform;
-    private Transform SpawnManager;
-    public Transform centerTransform;
+    private GameObject SpawnManager;
+    public Vector3 centerTransform;
+    public Vector2 battlePosition;
     public SpriteRenderer sprite;
     public Animator animator;
     public GameObject Enhencedbullet;
@@ -46,7 +49,7 @@ public class Sniper : MonoBehaviour
     void Start()
     {
         playerTransform = GameObject.Find("Player").transform;
-        SpawnManager = GameObject.Find("SpawnManager").transform;
+        SpawnManager = GameObject.Find("SpawnManager");
         scoreManager = GameObject.Find("ScoreManager");
         curState = State.follow;
         elapsedTime = 0.0f;
@@ -89,8 +92,14 @@ public class Sniper : MonoBehaviour
             case State.follow: UpdateFollowState(); break;
             case State.dead: UpdateDeadState(); break;
             case State.attack: UpdateAttackState(); break;
-
+            case State.hired: UpdateHiredState(); break;
         }
+
+        if (hired == true)
+        {
+            curState = State.hired;
+        }
+
 
         // If no health, switch to dead state
         if (health <= 0)
@@ -98,17 +107,34 @@ public class Sniper : MonoBehaviour
             curState = State.dead;
         }
     }
-    
+
+    protected void UpdateHiredState()
+    {
+        dist = Vector2.Distance(transform.position, battlePosition);
+        enemyAgent.SetDestination(battlePosition);
+        enemyAgent.stoppingDistance = 1.0f;
+
+        if (dist >= 1.0f)
+        {
+            animator.SetBool("IsAttack", false);
+        }
+        else
+        {
+            animator.SetBool("IsAttack", true);
+            SHOOTBULLET();
+        } 
+    }
+
     protected void UpdateFollowState()
     {
         animator.SetBool("IsAttack", false);
 
         if (enchantLooking == true && enchanted == false)
         {
-            dist = Vector2.Distance(transform.position, centerTransform.position);
-            enemyAgent.SetDestination(centerTransform.position);
+            dist = Vector2.Distance(transform.position, centerTransform);
+            enemyAgent.SetDestination(centerTransform);
 
-            if (dist < 5.0f)
+            if (dist <= 5.0f)
             {
                 enchanted = true;
                 health += 50;
@@ -153,7 +179,7 @@ public class Sniper : MonoBehaviour
     protected void UpdateDeadState()
     {
         playerTransform.gameObject.SendMessage("GiveEXP", (int)exp_worth);
-        SpawnManager.gameObject.SendMessage("reduceEnemy", (int)1);
+        SpawnManager.GetComponent<SpawnManager>().curEnemyNum -= 1;
         scoreManager.GetComponent<ScoreManager>().AddToScore(score_worth);
         Destroy(gameObject);
     }

@@ -23,6 +23,7 @@ public class PlayerBullet : MonoBehaviour
         Wall,
         Center,
         Support,
+        AirSupport,
     }
     private string enemyType;
 
@@ -90,7 +91,13 @@ public class PlayerBullet : MonoBehaviour
                 other.collider.gameObject.SendMessage("Flash");
                 Destroy(gameObject);
                 break;
-            
+
+            case "AirSupport":
+                other.collider.gameObject.GetComponent<AirSupport>().health -= damage;
+                other.collider.gameObject.SendMessage("Flash");
+                Destroy(gameObject);
+                break;
+
             default:
                 Destroy(gameObject);
                 break;

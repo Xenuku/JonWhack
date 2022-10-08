@@ -280,7 +280,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 50
-  m_Sprite: {fileID: 21300020, guid: 77d511b2a5e9c79409263d1cc7828e7a, type: 3}
+  m_Sprite: {fileID: 21300028, guid: d13f53c1f0f786e4c970a9351a37b322, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -325,7 +325,7 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: -6.39, y: 0}
   m_Size: {x: 16, y: 42.1}
   m_Direction: 0
 --- !u!114 &3459981180335479228
@@ -348,7 +348,7 @@ MonoBehaviour:
   enchantLooking: 0
   exp_worth: 150
   score_worth: 5
-  centerTransform: {fileID: 0}
+  centerTransform: {x: 0, y: 0, z: 0}
   sprite: {fileID: 9076333193507789495}
   animator: {fileID: 8768505827755637500}
   Enhencedbullet: {fileID: 8259603303253518586, guid: 2b0239b1d8f18454981aa24baba07542, type: 3}
@@ -367,7 +367,7 @@ Animator:
   m_GameObject: {fileID: 9197227473533579731}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: e7d99299fd9983c4faf526644ecd1238, type: 2}
+  m_Controller: {fileID: 9100000, guid: 2a7840a1da3b0a44f9e4c1b7658d3d9c, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

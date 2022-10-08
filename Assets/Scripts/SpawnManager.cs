@@ -5,125 +5,170 @@ using UnityEngine;
 public class SpawnManager : MonoBehaviour
 {
     public bool enableSpawn = true;
+    public int maxEnemyNum;
+    public int curEnemyNum;
+    public int maxEliteNum;
+    public int curEliteNum;
+    public int maxCaptainNum;
+    public int curCaptainNum;
 
-    public int enemyNum = 1;
+    public int addNormal;
+    public int addElite;
+    public int addCaptain;
+
 
     public GameObject[] EnemyTypes;
-    public GameObject[] BigEnemyTypes;
+    public GameObject[] EliteEnemyTypes;
+    public GameObject Captain;
 
-    public Transform[] spawnPoint;
+    private float timeElapsed = 0.0f;
+    private int playerLevels;
+    private float playerDistance;
+    private Vector2 spawnPosition;
 
-    public int respawnTime = 5; 
-    private int currentTime;
-    public int increaseRespawn = 5;
-    //public int reset;
-    public int enemy_num_limit = 15;
-    //public randomX_1;
+    //references
+    public GameObject player;
 
+    public enum State
+    {
+        difficulty1,
+        difficulty2,
+        difficulty3,
+        boss,
+    }
 
-    // Start is called before the first frame update
+    public State curState;
+
     void Start()
     {
-        respawnTime=1; //first spawn
-        increaseRespawn=5;
-        enemy_num_limit=30;
+        curState = State.difficulty1;
 
-        currentTime = 0;
-        InvokeRepeating("AddSecond", 0, 0.5f);
-        //InvokeRepeating("SpawnSystem", 0, 0.1f);
-        
-        //InvokeRepeating("manageEnemyNum",5f,1f);
-        //SpawnEnemy();
+        curEliteNum = 0;
+        curEnemyNum = 0;
+
+        playerLevels = player.GetComponent<PlayerController>().level;
     }
 
-    // Update is called once per frame
+
     void Update()
     {
-        SpawnSystem();
-        
-        manageEnemyNum();
-        //SpawnSystem();
-        
+        timeElapsed += Time.deltaTime;
 
+        switch (curState)
+        {
+            case State.difficulty1: Difficulty1(); break;
+            case State.difficulty2: Difficulty2(); break;
+            case State.difficulty3: Difficulty3(); break;
+            case State.boss: Boss(); break;
+        }
+
+        if (playerLevels >= 5 && playerLevels < 10)
+        {
+            curState = State.difficulty2;
+        }
+        else if (playerLevels >= 10 && playerLevels < 15)
+        {
+            curState = State.difficulty3;
+        }
+        else if (playerLevels >= 15)
+        {
+            curState = State.boss;
+        }
     }
+
+    protected void Difficulty1()
+    {
+        addNormal = 0;
+        addElite = 0;
+
+        SpawnEnemy();
+    }
+
+    protected void Difficulty2()
+    {
+        addNormal = 10;
+        addElite = 3;
+
+        SpawnEnemy();
+    }
+
+    protected void Difficulty3()
+    {
+        addNormal = 20;
+        addElite = 6;
+
+        SpawnEnemy();
+        SpawnCaptain();
+    }
+
+    protected void Boss()
+    {
+        addNormal = 30;
+        addElite = 9;
+
+        SpawnEnemy();
+        SpawnCaptain();
+    }
+
     void SpawnEnemy()
     {
+        int ranElite = Random.Range(0, EliteEnemyTypes.Length);
         int ranEnemy = Random.Range(0, EnemyTypes.Length);
-        int boss = Random.Range(0, 10);
-        float randomX = Random.Range(Random.Range(Camera.main.transform.position.x - 50.0f, Camera.main.transform.position.x - 40.0f), Random.Range(Camera.main.transform.position.x + 50.0f, Camera.main.transform.position.x + 40.0f));
-        float randomY = Random.Range(Random.Range(Camera.main.transform.position.y - 50.0f, Camera.main.transform.position.y - 40.0f), Random.Range(Camera.main.transform.position.y + 50.0f, Camera.main.transform.position.y + 40.0f));
-        // if (enableSpawn)
-        // {
-        //     GameObject enemy = (GameObject)Instantiate(EnemyTypes[ranEnemy], new Vector2(randomX, randomY), Quaternion.identity);
-        //     enemyNum += 1;
-        // }
-        int ranBigEnemy = Random.Range(0, BigEnemyTypes.Length);
-        if(enableSpawn){
-            if ( boss < 3 )
-            {
-                GameObject BigEnemy = (GameObject)Instantiate(BigEnemyTypes[ranBigEnemy], new Vector2(randomX, randomY), Quaternion.identity);
-                enemyNum+=1;
-                
-            }else{
-                GameObject enemy = (GameObject)Instantiate(EnemyTypes[ranEnemy], new Vector2(randomX, randomY), Quaternion.identity);
-                enemyNum += 1;
-            }
+
+        spawnPosition.x = Random.Range(Camera.main.transform.position.x - 50.0f, Camera.main.transform.position.x + 50.0f);
+        spawnPosition.y = Random.Range(Camera.main.transform.position.y - 50.0f, Camera.main.transform.position.y + 50.0f);
+
+        playerDistance = Vector2.Distance(spawnPosition, player.transform.position);
+
+        while (playerDistance <= 30.0f)
+        {
+            spawnPosition.x = Random.Range(Camera.main.transform.position.x - 50.0f, Camera.main.transform.position.x + 50.0f);
+            spawnPosition.y = Random.Range(Camera.main.transform.position.y - 50.0f, Camera.main.transform.position.y + 50.0f);
+            playerDistance = Vector2.Distance(spawnPosition, player.transform.position);
         }
-        Debug.Log(enemyNum);
 
-    }
-    void AddSecond()
-    {
-        currentTime += 1;
+        if (curEnemyNum < maxEnemyNum + addNormal)
+        {
+            GameObject enmeies = (GameObject)Instantiate(EnemyTypes[ranEnemy], spawnPosition, Quaternion.identity);
 
-        //Debug.Log(enemy_num_limit);
-
-
-    }
-    void SpawnSystem()
-    {
-        if (Mathf.Floor(currentTime % respawnTime) == 0)
-        { //for respawn time
-            //Debug.Log("spawn enemy");
-            SpawnEnemy();
+            curEnemyNum += 1;
         }
-        if (Mathf.Floor(currentTime % increaseRespawn) == 0)
-        {   
 
-            if(respawnTime<2){
-            //Debug.Log("increase num enemy");
-
-            enemy_num_limit += 1;
-            respawnTime=7; //from second respawn
-            //Debug.Log(enemy_num_limit);
-
-            }else{
-            //Debug.Log("decrease respawn time");
-
-            respawnTime -= 1;
-           // Debug.Log(respawnTime);
-
-
-            }
+        if (curEliteNum < maxEliteNum + addElite)
+        {
+            GameObject Elites = (GameObject)Instantiate(EliteEnemyTypes[ranElite], spawnPosition, Quaternion.identity);
+            
+            curEliteNum += 1;
         }
         
     }
-    void manageEnemyNum()
+
+    void SpawnCaptain()
     {
-       
-        if (enemyNum > enemy_num_limit)
+        int ranElite = Random.Range(0, EliteEnemyTypes.Length);
+        int ranEnemy = Random.Range(0, EnemyTypes.Length);
+
+        spawnPosition.x = Random.Range(Camera.main.transform.position.x - 50.0f, Camera.main.transform.position.x + 50.0f);
+        spawnPosition.y = Random.Range(Camera.main.transform.position.y - 50.0f, Camera.main.transform.position.y + 50.0f);
+
+        playerDistance = Vector2.Distance(spawnPosition, player.transform.position);
+
+        while (playerDistance <= 30.0f)
         {
-            enableSpawn = false;
+            spawnPosition.x = Random.Range(Camera.main.transform.position.x - 50.0f, Camera.main.transform.position.x + 50.0f);
+            spawnPosition.y = Random.Range(Camera.main.transform.position.y - 50.0f, Camera.main.transform.position.y + 50.0f);
+            playerDistance = Vector2.Distance(spawnPosition, player.transform.position);
         }
-        else if (enemyNum <= enemy_num_limit + 1)
+
+        if (curCaptainNum < maxCaptainNum + addCaptain)
         {
-            enableSpawn = true;
+            GameObject BadAss = (GameObject)Instantiate(Captain, spawnPosition, Quaternion.identity);
+
+            curCaptainNum += 1;
         }
-    }
-    void reduceEnemy(int die)
-    {
-        //Debug.Log("reduceEnemy ");
-        enemyNum -= die;
     }
 
 }
+
+
+

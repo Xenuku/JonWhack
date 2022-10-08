@@ -16,13 +16,7 @@ public class Bullet : MonoBehaviour
 
     public enum EnemyTypes 
     {
-        Melee,
-        Sniper,
-        Heavy,
         Player,
-        Wall,
-        Center,
-        Support,
     }
     private string enemyType;
 
@@ -41,16 +35,6 @@ public class Bullet : MonoBehaviour
     {
         enemyType = other.collider.gameObject.tag;
         switch(enemyType) {
-            case "Wall":
-                other.collider.gameObject.GetComponent<Wall>().health -= damage;
-                other.collider.gameObject.SendMessage("Flash");
-                Destroy(gameObject);
-                break;
-            case "Center":
-                other.collider.gameObject.GetComponent<Center>().health -= damage;
-                other.collider.gameObject.SendMessage("Flash");
-                Destroy(gameObject);
-                break;
             case "Player":
                 other.collider.gameObject.GetComponent<PlayerController>().health -= damage;
                 other.collider.gameObject.SendMessage("Flash");

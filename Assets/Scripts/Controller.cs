@@ -7,7 +7,8 @@ public class Controller : MonoBehaviour
 {
     public GameObject scoreManager;
     public GameObject player;
-    public GameObject howToPanel;
+    public GameObject helpPage1;
+    public GameObject helpPage2;
 
     public void QuitGame()
     {
@@ -20,11 +21,16 @@ public class Controller : MonoBehaviour
         SceneManager.LoadScene(levelName);
     }
 
-    public void ShowHideHelp(string showHide) {
-        if(showHide == "Show") {
-            howToPanel.SetActive(true);
+    public void ShowHelp(string page) {
+        if(page == "Page1") {
+            helpPage1.SetActive(true);
+            helpPage2.SetActive(false);
+        } else if (page == "Page2") {
+            helpPage1.SetActive(false);
+            helpPage2.SetActive(true);
         } else {
-            howToPanel.SetActive(false);
+            helpPage1.SetActive(false);
+            helpPage2.SetActive(false);
         }
     }
 

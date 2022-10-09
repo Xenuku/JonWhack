@@ -31,7 +31,9 @@ public class PlayerController : MonoBehaviour
     public SpriteRenderer sprite;
     private GameObject controller;
     Vector3 mousePos;
-
+    public GameObject upgradeManager;
+    private bool upgradeChosen;
+    
     public void Start ()
     {
         health = maxHealth;
@@ -42,6 +44,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        upgradeChosen = upgradeManager.GetComponent<UpgradeManager>().upgradeChosen;
         float curExp = (float)experience;
         expBar.fillAmount = curExp / levelExpRequired;
         healthBar.fillAmount = health / maxHealth;
@@ -57,26 +60,20 @@ public class PlayerController : MonoBehaviour
             animator.SetBool("IsWalking", false);
         }
 
-        if (!PauseMenu.gameIsPaused || !UpgradeManager.upgradeScreenOpen)
+        if (!PauseMenu.gameIsPaused)
         {
-            mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            if (upgradeChosen) {
+                mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-            if (mousePos.x >= transform.position.x)
-            {
-                sprite.flipX = false;
+                if (mousePos.x >= transform.position.x)
+                {
+                    sprite.flipX = false;
+                }
+                else
+                {
+                    sprite.flipX = true;
+                }
             }
-            else
-            {
-                sprite.flipX = true;
-            }
-
-        }
-
-        // For debugging, press space to take some damage and give yourself XP
-        // So you can test the HP and EXP bars.
-        if (Input.GetKeyUp(KeyCode.Space)) {
-            GiveEXP(100);
-            ApplyDamage(10);
         }
 
         if (health <= 0) {

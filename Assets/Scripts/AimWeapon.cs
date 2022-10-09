@@ -9,7 +9,7 @@ public class AimWeapon : MonoBehaviour
     protected float elapsedTime;
     public GameObject pBullet;
     public float shootRate = 0.3f;
-    public float bulletSpeed = 30.0f;
+    public float bulletSpeed = 60.0f;
     public GameObject endGunPoint;
     public Texture2D crosshair;
     private SpriteRenderer playerSprite;
@@ -20,9 +20,12 @@ public class AimWeapon : MonoBehaviour
 
     private Vector2 carmeraPos;
     public GameObject carmera;
+    public GameObject upgradeManager;
 
     public AudioSource musicPlayer;
     public AudioClip audios;
+
+    private bool upgradeChosen;
 
     private void Awake()
     {
@@ -39,16 +42,20 @@ public class AimWeapon : MonoBehaviour
     {
         elapsedTime = shootRate; // First shot can fire (thanks Dimitri)
         playerSprite = GameObject.FindGameObjectWithTag("Player").GetComponent<SpriteRenderer>();
+        
     }
 
     private void Update()
     {
+        upgradeChosen = upgradeManager.GetComponent<UpgradeManager>().upgradeChosen;
         shootRate = player.GetComponent<PlayerController>().fireRate;
-        if (!PauseMenu.gameIsPaused || !UpgradeManager.upgradeScreenOpen) {
-            mouseP = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            HandleAim();
-            HandleShooting();
-            elapsedTime += Time.deltaTime;
+        if (!PauseMenu.gameIsPaused) {
+            if(upgradeChosen) {
+                mouseP = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                HandleAim();
+                HandleShooting();
+                elapsedTime += Time.deltaTime;
+            }
         }
     }
 

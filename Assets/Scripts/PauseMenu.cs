@@ -21,19 +21,20 @@ public class PauseMenu : MonoBehaviour
                 ResumeGame();
             }
         }
+        print("Time" + Time.timeScale);
     }
     public void PauseGame()
     {
+        Time.timeScale = 0;
         gameIsPaused = !gameIsPaused;
         pauseMenu.SetActive(gameIsPaused);
-        Time.timeScale = 0;
     }
 
     public void ResumeGame()
     {
+        Time.timeScale = 1;
         gameIsPaused = !gameIsPaused;
         pauseMenu.SetActive(gameIsPaused);
-        Time.timeScale = 1;
     }
 
     public void QuitSession() 

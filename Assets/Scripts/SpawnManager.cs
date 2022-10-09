@@ -25,7 +25,7 @@ public class SpawnManager : MonoBehaviour
     public GameObject Captain;
 
     private float timeElapsed = 0.0f;
-    private int playerLevels;
+    private int playerLevel;
     private float playerDistance;
     private Vector2 spawnPosition;
 
@@ -51,7 +51,7 @@ public class SpawnManager : MonoBehaviour
         curEliteNum = 0;
         curEnemyNum = 0;
 
-        playerLevels = player.GetComponent<PlayerController>().level;
+        playerLevel = player.GetComponent<PlayerController>().level;
 
         musicPlayer.clip = audios[0];
         musicPlayer.Play();
@@ -70,15 +70,15 @@ public class SpawnManager : MonoBehaviour
             case State.boss: Boss(); break;
         }
 
-        if (playerLevels >= 2 && playerLevels < 4)
+        if (playerLevel >= 2 && playerLevel < 4)
         {
             curState = State.difficulty2;
         }
-        else if (playerLevels >= 4 && playerLevels < 7)
+        else if (playerLevel >= 4 && playerLevel < 7)
         {
             curState = State.difficulty3;
         }
-        else if (playerLevels >= 7)
+        else if (playerLevel >= 7)
         {
             curState = State.boss;
         }
@@ -121,7 +121,7 @@ public class SpawnManager : MonoBehaviour
     {
         addNormal = 30;
         addElite = 9;
-        difficultyText.text = "Threat Level: <color=#5b4965>Midnight</color>";
+        difficultyText.text = "Threat Level: <color=#2e293a>Midnight</color>";
         SpawnEnemy();
         SpawnCaptain();
     }

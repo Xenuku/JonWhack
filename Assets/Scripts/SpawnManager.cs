@@ -6,31 +6,31 @@ using TMPro;
 public class SpawnManager : MonoBehaviour
 {
     public bool enableSpawn = true;
-    public int maxEnemyNum;
-    public int curEnemyNum;
-    public int maxEliteNum;
-    public int curEliteNum;
-    public int maxCaptainNum;
-    public int curCaptainNum;
+    public int maxEnemyNum; //set the max Enemy number for limitation
+    public int curEnemyNum; // current spawned enemy number
+    public int maxEliteNum; // limit of elite number
+    public int curEliteNum; // current elite number
+    public int maxCaptainNum; // limit of captain enemy type number
+    public int curCaptainNum; // current number
 
-    public int addNormal;
-    public int addElite;
-    public int addCaptain;
 
+    public int addNormal; // add normal enemy type limit.
+    public int addElite; // add elite enemy type limit.
+    public int addCaptain; //add captain enemy type limit.
     //music player
     public AudioSource musicPlayer;
     public List<AudioClip> audios;
 
     //enemy lists
-    public GameObject[] EnemyTypes;
-    public GameObject[] EliteEnemyTypes;
-    public GameObject Captain;
+    public GameObject[] EnemyTypes; // list of enemy type
+    public GameObject[] EliteEnemyTypes; // list of elite enemy type
+    public GameObject Captain; // Boss
 
     //some references variable
-    private float timeElapsed = 0.0f;
-    private int playerLevel;
-    private float playerDistance;
-    private Vector2 spawnPosition;
+    private float timeElapsed = 0.0f; // for the setting a time
+    private int playerLevel; // get player level for threat level
+    private float playerDistance; //distance between user and enemy
+    private Vector2 spawnPosition; //enemy postion
 
     //references
     public GameObject player;
@@ -80,15 +80,15 @@ public class SpawnManager : MonoBehaviour
         //difficulty3: level 4-7, boss: level >= 7
         if (playerLevel >= 2 && playerLevel < 4)
         {
-            curState = State.difficulty2;
+            curState = State.difficulty2; // during player level 2 to 3 difficulty 2
         }
-        else if (playerLevel >= 4 && playerLevel < 7)
+        else if (playerLevel >= 4 && playerLevel < 7) // during player level 4 to 6 difficulty 3
         {
             curState = State.difficulty3;
         }
         else if (playerLevel >= 7)
         {
-            curState = State.boss;
+            curState = State.boss; //generate boss
         }
     }
 
@@ -98,7 +98,7 @@ public class SpawnManager : MonoBehaviour
         addNormal = 0;
         addElite = 0;
         difficultyText.text = "Threat Level: <color=\"green\">Low</color>";
-        SpawnEnemy();
+        SpawnEnemy(); //spawn enemy and present difficultyText for playgame scene.
     }
 
     //added more enemy for 2nd difficulty
@@ -120,7 +120,7 @@ public class SpawnManager : MonoBehaviour
         {
             musicPlayer.clip = audios[1];
             musicPlayer.Play();
-            bossTheme = true;
+            bossTheme = true; //for before boss entry
         }
 
         addNormal = 20;
@@ -137,7 +137,7 @@ public class SpawnManager : MonoBehaviour
         addElite = 9;
         difficultyText.text = "Threat Level: <color=#2e293a>Midnight</color>";
         SpawnEnemy();
-        SpawnCaptain();
+        SpawnCaptain(); //go into boss phase
     }
 
     void SpawnEnemy()
@@ -147,7 +147,7 @@ public class SpawnManager : MonoBehaviour
         int ranEnemy = Random.Range(0, EnemyTypes.Length);
 
         //random spawn position within 50.0f from center of camera
-        spawnPosition.x = Random.Range(Camera.main.transform.position.x - 50.0f, Camera.main.transform.position.x + 50.0f);
+        spawnPosition.x = Random.Range(Camera.main.transform.position.x - 50.0f, Camera.main.transform.position.x + 50.0f);//  outside of user main camera
         spawnPosition.y = Random.Range(Camera.main.transform.position.y - 50.0f, Camera.main.transform.position.y + 50.0f);
 
         //update player distance for future use
@@ -166,14 +166,14 @@ public class SpawnManager : MonoBehaviour
         {
             GameObject enmeies = (GameObject)Instantiate(EnemyTypes[ranEnemy], spawnPosition, Quaternion.identity);
 
-            curEnemyNum += 1;
+            curEnemyNum += 1; // if current enemy is less than limit then respawn enemy
         }
 
         if (curEliteNum < maxEliteNum + addElite)
         {
             GameObject Elites = (GameObject)Instantiate(EliteEnemyTypes[ranElite], spawnPosition, Quaternion.identity);
             
-            curEliteNum += 1;
+            curEliteNum += 1; //if elite enemy is less than limit then respawn elite.
         }
         
     }
@@ -184,14 +184,14 @@ public class SpawnManager : MonoBehaviour
         int ranEnemy = Random.Range(0, EnemyTypes.Length);
 
         spawnPosition.x = Random.Range(Camera.main.transform.position.x - 50.0f, Camera.main.transform.position.x + 50.0f);
-        spawnPosition.y = Random.Range(Camera.main.transform.position.y - 50.0f, Camera.main.transform.position.y + 50.0f);
+        spawnPosition.y = Random.Range(Camera.main.transform.position.y - 50.0f, Camera.main.transform.position.y + 50.0f);//location setting
 
         playerDistance = Vector2.Distance(spawnPosition, player.transform.position);
 
         while (playerDistance <= 30.0f)
         {
             spawnPosition.x = Random.Range(Camera.main.transform.position.x - 50.0f, Camera.main.transform.position.x + 50.0f);
-            spawnPosition.y = Random.Range(Camera.main.transform.position.y - 50.0f, Camera.main.transform.position.y + 50.0f);
+            spawnPosition.y = Random.Range(Camera.main.transform.position.y - 50.0f, Camera.main.transform.position.y + 50.0f);// not respawn near the player
             playerDistance = Vector2.Distance(spawnPosition, player.transform.position);
         }
 

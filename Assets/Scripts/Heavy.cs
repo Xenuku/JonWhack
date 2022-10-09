@@ -23,7 +23,6 @@ public class Heavy : MonoBehaviour
     public int health = 50;
     public float shootRate;
     public float attackRange;
-    public float attackRangeStop;
     public int exp_worth = 400;
     public int score_worth;
     protected bool Dead;

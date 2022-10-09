@@ -343,8 +343,8 @@ MonoBehaviour:
   curState: 0
   shootRate: 3
   health: 15
-  attackRange: 12
-  attackRangeStop: 12
+  attackRange: 15
+  attackRangeStop: 15
   enchantLooking: 0
   hired: 0
   exp_worth: 150
@@ -353,7 +353,7 @@ MonoBehaviour:
   battlePosition: {x: 0, y: 0}
   sprite: {fileID: 9076333193507789495}
   animator: {fileID: 8768505827755637500}
-  Enhencedbullet: {fileID: 8259603303253518586, guid: 2b0239b1d8f18454981aa24baba07542, type: 3}
+  enhencedBullet: {fileID: 0}
   bullet: {fileID: 8259603303253518586, guid: 299a59c7581eed71ea0961e7e308b8b9, type: 3}
   bulletSpawnPoint: {fileID: 2304749456118071986}
   sword: {fileID: 1987063950569989105}
@@ -394,7 +394,7 @@ NavMeshAgent:
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
-  m_StoppingDistance: 12
+  m_StoppingDistance: 15
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1

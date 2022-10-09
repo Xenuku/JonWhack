@@ -10,7 +10,6 @@ public class Sniper : MonoBehaviour
     public int health;
     // ranges
     public float attackRange;
-    public float attackRangeStop;
     public bool enchantLooking = false;
     private bool enchanted = false;
     public bool hired = false;

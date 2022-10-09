@@ -51,8 +51,6 @@ public class SpawnManager : MonoBehaviour
         curEliteNum = 0;
         curEnemyNum = 0;
 
-        playerLevel = player.GetComponent<PlayerController>().level;
-
         musicPlayer.clip = audios[0];
         musicPlayer.Play();
     }
@@ -61,6 +59,9 @@ public class SpawnManager : MonoBehaviour
     void Update()
     {
         timeElapsed += Time.deltaTime;
+
+        playerLevel = player.GetComponent<PlayerController>().level;
+
 
         switch (curState)
         {

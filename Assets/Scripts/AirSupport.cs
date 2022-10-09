@@ -52,7 +52,7 @@ public class AirSupport : MonoBehaviour
             Flash();
             Flash();
             GameObject.FindWithTag("Captain").GetComponent<Captain>().curAirSupport -= 1;
-            Destroy(gameObject, 2.0f);
+            Destroy(gameObject, 0.5f);
         }
     }
 

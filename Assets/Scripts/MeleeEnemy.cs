@@ -177,7 +177,7 @@ public class MeleeEnemy : MonoBehaviour
         if (dist <= 10.0f)
         {
             curState = State.attack;
-            elapsedTime = Random.Range(0.0f, 9.0f);
+            elapsedTime = Random.Range(5.0f, 9.0f);
         }
     }
 

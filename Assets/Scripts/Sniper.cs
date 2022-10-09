@@ -35,7 +35,7 @@ public class Sniper : MonoBehaviour
     public Vector2 battlePosition;
     public SpriteRenderer sprite;
     public Animator animator;
-    public GameObject enhencedbullet;
+    public GameObject enhencedBullet;
     public GameObject bullet;
     public GameObject bulletSpawnPoint;  
     private GameObject scoreManager;
@@ -226,7 +226,7 @@ public class Sniper : MonoBehaviour
                     direction.Normalize();
 
                     GameObject Bullet = (GameObject)Instantiate(
-                                        enhencedbullet,
+                                        enhencedBullet,
                                         bulletSpawnPoint.transform.position + (Vector3)(direction * 0.5f),
                                         Quaternion.identity);
 

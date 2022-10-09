@@ -51,7 +51,7 @@ public class Support : MonoBehaviour
     public UnityEngine.AI.NavMeshAgent enemyAgent;
     public SpriteRenderer sprite;
     public GameObject bullet;
-    public GameObject enhencedbullet;
+    public GameObject enhencedBullet;
     public GameObject bulletSpawnPoint;
     public GameObject sword;
     public GameObject shield;
@@ -255,7 +255,7 @@ public class Support : MonoBehaviour
                     direction.Normalize();
 
                     GameObject Bullet = (GameObject)Instantiate(
-                                        enhencedbullet,
+                                        enhencedBullet,
                                         bulletSpawnPoint.transform.position + (Vector3)(direction * 0.5f),
                                         Quaternion.identity);
 

@@ -44,7 +44,7 @@ public class Heavy : MonoBehaviour
     public SpriteRenderer sprite;
     public GameObject sword;
     public GameObject shield;
-    public GameObject enhencedbullet;
+    public GameObject enhencedBullet;
     public GameObject blood;
 
     // Start is called before the first frame update
@@ -224,7 +224,7 @@ public class Heavy : MonoBehaviour
                     direction.Normalize();
 
                     GameObject Bullet = (GameObject)Instantiate(
-                                        enhencedbullet,
+                                        enhencedBullet,
                                         bulletSpawnPoint.transform.position + (Vector3)(direction * 0.5f),
                                         Quaternion.identity);
 

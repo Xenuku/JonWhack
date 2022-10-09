@@ -11,7 +11,7 @@ public class Center : MonoBehaviour
     private Transform target;
     private int targetType;
     //Support center will have cooldown ready upon spawn
-    private float timeElapsed = 20.0f;
+    private float timeElapsed = 10.0f;
 
     // Start is called before the first frame update
     void Start()
@@ -25,7 +25,7 @@ public class Center : MonoBehaviour
     {
         timeElapsed += Time.deltaTime;
         //only a target will be enchanted upon selection each 10s
-        if (timeElapsed >= 20.0f && targetType == 1 && GameObject.FindWithTag("Melee") != null)
+        if (timeElapsed >= 10.0f && targetType == 1 && GameObject.FindWithTag("Melee") != null)
         {
             //target's enchantlooking bool will be turn on and have coordinates of support center
             target = GameObject.FindWithTag("Melee").transform;
@@ -33,21 +33,21 @@ public class Center : MonoBehaviour
             target.GetComponent<MeleeEnemy>().centerTransform = transform.position;
             timeElapsed = 0.0f;
         }
-        else if (timeElapsed >= 20.0f && targetType == 2 && GameObject.FindWithTag("Sniper") != null)
+        else if (timeElapsed >= 10.0f && targetType == 2 && GameObject.FindWithTag("Sniper") != null)
         {
             target = GameObject.FindWithTag("Sniper").transform;
             target.GetComponent<Sniper>().enchantLooking = true;
             target.GetComponent<Sniper>().centerTransform = transform.position;
             timeElapsed = 0.0f;
         }
-        else if (timeElapsed >= 20.0f && targetType == 3 && GameObject.FindWithTag("Support") != null)
+        else if (timeElapsed >= 10.0f && targetType == 3 && GameObject.FindWithTag("Support") != null)
         {
             target = GameObject.FindWithTag("Support").transform;
             target.GetComponent<Support>().enchantLooking = true;
             target.GetComponent<Support>().centerTransform = transform.position;
             timeElapsed = 0.0f;
         }
-        else if (timeElapsed >= 20.0f && targetType == 4 && GameObject.FindWithTag("Heavy")!= null)
+        else if (timeElapsed >= 10.0f && targetType == 4 && GameObject.FindWithTag("Heavy")!= null)
         {
             target = GameObject.FindWithTag("Heavy").transform;
             target.GetComponent<Heavy>().enchantLooking = true;

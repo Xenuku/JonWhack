@@ -13,18 +13,19 @@ public class HighScores : MonoBehaviour
     {
         StartCoroutine(getScores("http://dreamlo.com/lb/63399d828f40bc0fe88fdf01/pipe/10"));
     }
-
+    // Get the scores from the server
     IEnumerator getScores(string uri) 
     {
         UnityWebRequest uwr = UnityWebRequest.Get(uri);
         yield return uwr.SendWebRequest();
-
+        // If something went wrong, log the error
         if (uwr.result == UnityWebRequest.Result.ConnectionError)
         {
             Debug.Log("Error while getting: " + uwr.error);
         } 
         else
         {
+            // Otherwise, build the leaderboard based on the data retrieved
             string[] entries = uwr.downloadHandler.text.Split(new char[] {'\n'}, System.StringSplitOptions.RemoveEmptyEntries);
             string textBuilder = "";
             for (int i = 0; i < entries.Length; i++) {

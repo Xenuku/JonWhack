@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class UpgradeManager : MonoBehaviour
 {
-    public static bool upgradeScreenOpen;
     public GameObject upgradeScreen;
     public bool upgradeChosen = false;
     public GameObject playerGun;
@@ -18,22 +17,24 @@ public class UpgradeManager : MonoBehaviour
     {
        showScreen();
     }
-
+    // Pause the game and show the weapon choosing screen to apply some upgrades for the player
+    // depending on the choice of weapon they choose
     public void showScreen() 
     {
         Time.timeScale = 0;
         upgradeScreen.SetActive(true);
     }
-
+    // Once the weapon has been chosen, resume the game and close the screen
     public void hideScreen()
     {
         Time.timeScale = 1;
         upgradeScreen.SetActive(false);
     }
-
+    // The buttons in the UI will run this function with a gun name
+    // depending on which gun the player chose
     public void chooseGun(string gun) 
     {
-        hideScreen();
+        hideScreen(); // Hide the screen as the player has chosen
         if (gun == "AssaultRifle") {
             playerGun.GetComponent<SpriteRenderer>().sprite = assaultRifle;
             player.GetComponent<PlayerController>().damage = 5;

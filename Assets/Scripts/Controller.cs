@@ -12,15 +12,16 @@ public class Controller : MonoBehaviour
 
     public void QuitGame()
     {
-        Debug.Log("Quit button pressed");
-        Application.Quit();
+        Application.Quit(); // Close the game
     }
-    
+    // Used by the main menu mostly, to load to the scene required
     public void LoadLevel(string levelName) 
     {
         SceneManager.LoadScene(levelName);
     }
-
+    // Show the help page, if the user clicks to the next page
+    // hide the first page and show the next, if the user closes, set both
+    // to inactive to hide both
     public void ShowHelp(string page) {
         if(page == "Page1") {
             helpPage1.SetActive(true);

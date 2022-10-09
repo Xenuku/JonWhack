@@ -34,6 +34,7 @@ public class AimWeapon : MonoBehaviour
         Vector2 cursorPos = new Vector2(crosshair.width / 2, crosshair.height / 2);
         SetCursor(crosshair, cursorPos);
     }
+    // Set the cursor to a crosshair
     void SetCursor(Texture2D sprite, Vector2 center)
     {
         Cursor.SetCursor(sprite, center, CursorMode.Auto);
@@ -50,7 +51,7 @@ public class AimWeapon : MonoBehaviour
     {
         upgradeChosen = upgradeManager.GetComponent<UpgradeManager>().upgradeChosen;
         shootRate = player.GetComponent<PlayerController>().fireRate;
-
+        // only let the user aim and shoot if the game is not paused, and the weapon has been chosen
         if (!PauseMenu.gameIsPaused) {
             if(upgradeChosen) {
                 mouseP = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -68,7 +69,7 @@ public class AimWeapon : MonoBehaviour
         Vector3 aimDirection = (mouseP - transform.position).normalized;
         float angle = Mathf.Atan2(aimDirection.y, aimDirection.x) * Mathf.Rad2Deg;
         aimTransform.eulerAngles = new Vector3(0, 0, angle);
-
+        // Flip the sprite depending which way the player is aiming their mouse
         Vector3 localScale = Vector3.one;
         if (angle > 90 || angle < -90)
         {
@@ -82,7 +83,7 @@ public class AimWeapon : MonoBehaviour
         aimTransform.localScale = localScale;
     }
     
-    //generate bullet with designed speed accoding to mouse position
+    //generate bullet with speed according to mouse position
     private void HandleShooting()
     {
         if (Input.GetButton("Fire1"))
@@ -99,10 +100,10 @@ public class AimWeapon : MonoBehaviour
                                     Quaternion.identity);
 
                 baseBullet.GetComponent<Rigidbody2D>().velocity = direction * bulletSpeed;
-                //send kockback direction to bullets script so they can apply kockback correctly to enemy
+                //send knockback direction to bullets script so they can apply kockback correctly to enemy
                 pBullet.GetComponent<PlayerBullet>().knockDirection = direction;
 
-                //shake screen 3 times upon shoot
+                //shake screen 3 times upon shooting
                 carmera.SendMessage("shake");
                 carmera.SendMessage("shake");
                 carmera.SendMessage("shake");

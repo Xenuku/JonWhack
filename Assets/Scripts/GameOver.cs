@@ -58,12 +58,12 @@ public class GameOver : MonoBehaviour
         }
 
     }
-
+    
     public void SubmitScore() 
     {
         StartCoroutine(submitScoreOnline("http://dreamlo.com/lb/hJYnhROlS0uxMAwxZbomMgVAw0dFGO5EepS_ciW1eflA/"));
     }
-
+    // Send the score data to the server and take the player to the high scores page
     IEnumerator submitScoreOnline(string url) 
     {
         string finalUrl = url + "add/" + playerName.text + "/" + score + "/0/" + survived;

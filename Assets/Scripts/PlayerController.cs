@@ -36,6 +36,7 @@ public class PlayerController : MonoBehaviour
     
     public void Start ()
     {
+        // Set the health to the max health and set up the UI
         health = maxHealth;
         healthBar = GameObject.Find("HealthBar").GetComponent<Image>();
         expBar = GameObject.Find("ExpBar").GetComponent<Image>();
@@ -44,13 +45,17 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // Get the current value of the weapon being chosen, so the player can't shoot
+        // if it is not chosen
         upgradeChosen = upgradeManager.GetComponent<UpgradeManager>().upgradeChosen;
+        // Set the gui values according to the current values
         float curExp = (float)experience;
         expBar.fillAmount = curExp / levelExpRequired;
         healthBar.fillAmount = health / maxHealth;
+        // Handle the movement of the player
         movement.x = Input.GetAxisRaw("Horizontal");
         movement.y = Input.GetAxisRaw("Vertical");
-
+        // Animation for the players states (walking or standing still)
         if (movement.x != 0.0f || movement.y != 0.0f)
         {
             animator.SetBool("IsWalking", true);
@@ -59,7 +64,8 @@ public class PlayerController : MonoBehaviour
         {
             animator.SetBool("IsWalking", false);
         }
-
+        // If the game is paused or if the starting weapon has not been chosen
+        // Then do not allow the players sprite to change
         if (!PauseMenu.gameIsPaused)
         {
             if (upgradeChosen) {
@@ -75,12 +81,12 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
-
+        // Self explanatory, but once the players health is 0 or less, kill them
         if (health <= 0) {
             KillThePlayer();
         }
     }
-
+    // move our player around the world
     void FixedUpdate() 
     {
         rb.MovePosition(rb.position + 
@@ -88,11 +94,13 @@ public class PlayerController : MonoBehaviour
                         moveSpeed * 
                         Time.fixedDeltaTime
                     );
+        // If we have enough experience, then perform a level up
         if (experience >= levelExpRequired) {
             LevelUp();
         }
     }
-
+    // Once the player is killed, use the GameOver() function in the controller
+    // with the KIA value so the scoreboard can reflect the user was killed
     void KillThePlayer() {
         controller.GetComponent<Controller>().GameOver("KIA");
     }
@@ -106,14 +114,14 @@ public class PlayerController : MonoBehaviour
         experience = 0;
         // Stat increases
         health = maxHealth; // Heal the player on level up
-        damage += 2;
-        moveSpeed += 0.2f;
-        // Gui Changes
+        damage += 2; // increase the players damage slightly
+        moveSpeed += 0.2f; // increase the players movement speed slightly
+        // Gui Changes, set the level text in the EXP bar to the new level
         levelText.text = "Lv. " + level;
         // New XP required
         levelExpRequired = Mathf.FloorToInt(startExp * Mathf.Pow(curLevel, difficulty));
     }
-
+    // When the player is hit, take health away and flash the players sprite
     void ApplyDamage(int damage) {
         health -= damage;
         Flash();
@@ -123,7 +131,7 @@ public class PlayerController : MonoBehaviour
     void GiveEXP(int exp) {
         experience += exp;
     }
-
+    // Flash red very quickly when hit
     public IEnumerator Flash()
     {
         sprite.color = Color.red;

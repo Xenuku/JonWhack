@@ -42,7 +42,7 @@ public class AirSupport : MonoBehaviour
 
         transform.localScale = bodyScale;
 
-        if (timeElapsed >= 10.0f || health == 0)
+        if (timeElapsed >= 10.0f || health <= 0)
         {
             Flash();
             Flash();

@@ -45,17 +45,25 @@ public class AirSupport : MonoBehaviour
         if (timeElapsed >= 10.0f || health == 0)
         {
             Flash();
+            Flash();
+            Flash();
             GameObject.FindWithTag("Captain").GetComponent<Captain>().curAirSupport -= 1;
-            Destroy(gameObject);
+            Destroy(gameObject, 2.0f);
         }
     }
     void OnCollisionStay2D(Collision2D other)
     {
         if (other.collider.gameObject.tag == "Player")
         {
-            other.gameObject.SendMessage("ApplyDamage", 2);
+            other.gameObject.SendMessage("ApplyDamage", 1);
             other.gameObject.SendMessage("Flash");
         }
+    }
+
+    public IEnumerator resetVelocity()
+    {
+        yield return new WaitForSeconds(0.1f);
+        GetComponent<Rigidbody2D>().velocity = Vector2.zero;
     }
 
     public IEnumerator Flash()

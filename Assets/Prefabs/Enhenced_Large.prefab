@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7603872997515934111}
   - component: {fileID: 4406575215098854044}
   - component: {fileID: 3267061357739454477}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Enhenced_Large
   m_TagString: Bullet
   m_Icon: {fileID: 0}
@@ -121,8 +121,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 50
-  speed: 10
-  lifeTime: 2
+  speed: 15
+  lifeTime: 4
 --- !u!58 &3267061357739454477
 CircleCollider2D:
   m_ObjectHideFlags: 0

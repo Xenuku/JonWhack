@@ -2,18 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using TMPro;
 
 public class PlayerBullet : MonoBehaviour
 {
-    public int damage;
-    public float speed;
+    private int damage;
+    private float speed;
     public float lifeTime;
     private Vector2 newPos;
+
     public SpriteRenderer BulletSprite;
     Vector3 mousePosition;
     public GameObject player;
-    private Vector3Int contact;
     private Transform BulletSpawnPoint;
+    public GameObject damageNumber;
+    public Vector2 knockDirection;
+    private Rigidbody2D slot1;
 
     public enum EnemyTypes 
     {
@@ -24,6 +28,7 @@ public class PlayerBullet : MonoBehaviour
         Center,
         Support,
         AirSupport,
+        Captain,
     }
     private string enemyType;
 
@@ -31,6 +36,7 @@ public class PlayerBullet : MonoBehaviour
     {
         Destroy(gameObject, lifeTime);
         // Get the damage value from the player
+
         player = GameObject.Find("Player");
         damage = player.GetComponent<PlayerController>().damage;
         speed  = player.GetComponent<PlayerController>().bulletSpeed;
@@ -54,11 +60,20 @@ public class PlayerBullet : MonoBehaviour
 
         Vector3 localScale = new Vector3(0.05f, 0.05f, 0);
 
+
         transform.localScale = localScale;
     }
 
     private void OnCollisionEnter2D(Collision2D other)
     {
+        foreach (ContactPoint2D Hit in other.contacts)
+        {
+            Vector2 hitPoint = Hit.point;
+            Instantiate(damageNumber, new Vector3(hitPoint.x, hitPoint.y, 0), Quaternion.identity);
+            damageNumber.GetComponent<TextMeshPro>().SetText(damage.ToString());
+        }
+
+
         enemyType = other.collider.gameObject.tag;
        switch(enemyType) {
             case "Wall":
@@ -73,31 +88,43 @@ public class PlayerBullet : MonoBehaviour
                 break;
             case "Support":
                 other.collider.gameObject.GetComponent<Support>().health -= damage;
+                other.collider.gameObject.GetComponent<Rigidbody2D>().AddForce(knockDirection * 0.1f, ForceMode2D.Force);
+                other.collider.gameObject.SendMessage("resetVelocity");
                 other.collider.gameObject.SendMessage("Flash");
                 Destroy(gameObject);
                 break;
             case "Melee":
                 other.collider.gameObject.GetComponent<MeleeEnemy>().health -= damage;
+                other.collider.gameObject.GetComponent<Rigidbody2D>().AddForce(knockDirection * 0.1f, ForceMode2D.Force);
+                other.collider.gameObject.SendMessage("resetVelocity");
                 other.collider.gameObject.SendMessage("Flash");
                 Destroy(gameObject);
                 break;
             case "Sniper":
                 other.collider.gameObject.GetComponent<Sniper>().health -= damage;
+                other.collider.gameObject.GetComponent<Rigidbody2D>().AddForce(knockDirection * 0.1f, ForceMode2D.Force);
+                other.collider.gameObject.SendMessage("resetVelocity");
                 other.collider.gameObject.SendMessage("Flash");
                 Destroy(gameObject);
                 break;
             case "Heavy":
                 other.collider.gameObject.GetComponent<Heavy>().health -= damage;
+                other.collider.gameObject.GetComponent<Rigidbody2D>().AddForce(knockDirection * 0.1f, ForceMode2D.Force);
+                other.collider.gameObject.SendMessage("resetVelocity");
                 other.collider.gameObject.SendMessage("Flash");
                 Destroy(gameObject);
                 break;
             case "Captain":
                 other.collider.gameObject.GetComponent<Captain>().health -= damage;
+                other.collider.gameObject.GetComponent<Rigidbody2D>().AddForce(knockDirection * 0.1f, ForceMode2D.Force);
+                other.collider.gameObject.SendMessage("resetVelocity");
                 other.collider.gameObject.SendMessage("Flash");
                 Destroy(gameObject);
                 break;
             case "AirSupport":
                 other.collider.gameObject.GetComponent<AirSupport>().health -= damage;
+                other.collider.gameObject.GetComponent<Rigidbody2D>().AddForce(knockDirection * 0.1f, ForceMode2D.Force);
+                other.collider.gameObject.SendMessage("resetVelocity");
                 other.collider.gameObject.SendMessage("Flash");
                 Destroy(gameObject);
                 break;

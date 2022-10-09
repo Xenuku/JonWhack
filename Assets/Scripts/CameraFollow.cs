@@ -1,4 +1,6 @@
 ﻿using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
 
 public class CameraFollow : MonoBehaviour
 {
@@ -8,7 +10,8 @@ public class CameraFollow : MonoBehaviour
     public bool takeOffsetFromInitialPos = true;
     public Vector3 generalOffset;
     Vector3 whereCameraShouldBe;
-    bool warningAlreadyShown = false;
+
+    private Vector3 carmeraPos;
 
     private void Start() {
         if (takeOffsetFromInitialPos && target != null) generalOffset = transform.position - target.position;
@@ -16,16 +19,26 @@ public class CameraFollow : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (target != null) {
-            whereCameraShouldBe = target.position + generalOffset;
-            transform.position = Vector3.Lerp(transform.position, whereCameraShouldBe, 1 / laziness);
 
-            if (lookAtTarget) transform.LookAt(target);
-        } else {
-            if (!warningAlreadyShown) {
-                Debug.Log("Warning: You should specify a target in the simpleCamFollow script.", gameObject);
-                warningAlreadyShown = true;
-            }
-        }
+        whereCameraShouldBe = target.position + generalOffset;
+        transform.position = Vector3.Lerp(transform.position, whereCameraShouldBe, 1 / laziness);
+
+        if (lookAtTarget) transform.LookAt(target);
+
+    }
+
+    public IEnumerator shake()
+    {
+        carmeraPos.x = Random.Range(Camera.main.transform.position.x - 0.07f, Camera.main.transform.position.x + 0.07f);
+        carmeraPos.y = Random.Range(Camera.main.transform.position.y - 0.07f, Camera.main.transform.position.y + 0.07f);
+        carmeraPos.z = -20.0f;
+        transform.position = carmeraPos;
+
+        yield return new WaitForSeconds(0.2f);
+
+        whereCameraShouldBe = target.position + generalOffset;
+        transform.position = Vector3.Lerp(transform.position, whereCameraShouldBe, 1 / laziness);
+
+        if (lookAtTarget) transform.LookAt(target);
     }
 }

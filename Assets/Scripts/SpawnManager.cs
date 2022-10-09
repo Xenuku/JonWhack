@@ -17,6 +17,8 @@ public class SpawnManager : MonoBehaviour
     public int addElite;
     public int addCaptain;
 
+    public AudioSource musicPlayer;
+    public List<AudioClip> audios;
 
     public GameObject[] EnemyTypes;
     public GameObject[] EliteEnemyTypes;
@@ -50,6 +52,9 @@ public class SpawnManager : MonoBehaviour
         curEnemyNum = 0;
 
         playerLevels = player.GetComponent<PlayerController>().level;
+
+        musicPlayer.clip = audios[0];
+        musicPlayer.Play();
     }
 
 
@@ -65,15 +70,15 @@ public class SpawnManager : MonoBehaviour
             case State.boss: Boss(); break;
         }
 
-        if (playerLevels >= 5 && playerLevels < 10)
+        if (playerLevels >= 2 && playerLevels < 4)
         {
             curState = State.difficulty2;
         }
-        else if (playerLevels >= 10 && playerLevels < 15)
+        else if (playerLevels >= 4 && playerLevels < 7)
         {
             curState = State.difficulty3;
         }
-        else if (playerLevels >= 15)
+        else if (playerLevels >= 7)
         {
             curState = State.boss;
         }
@@ -95,8 +100,16 @@ public class SpawnManager : MonoBehaviour
         SpawnEnemy();
     }
 
+    private bool bossTheme = false;
     protected void Difficulty3()
     {
+        if(bossTheme == false)
+        {
+            musicPlayer.clip = audios[1];
+            musicPlayer.Play();
+            bossTheme = true;
+        }
+
         addNormal = 20;
         addElite = 6;
         difficultyText.text = "Threat Level: <color=\"red\">High</color>";

@@ -45,6 +45,7 @@ public class Heavy : MonoBehaviour
     public GameObject sword;
     public GameObject shield;
     public GameObject Enhencedbullet;
+    public GameObject blood;
 
     // Start is called before the first frame update
     void Start()
@@ -122,6 +123,11 @@ public class Heavy : MonoBehaviour
             animator.SetBool("IsAttack", true);
             SHOOTBULLET();
         }
+
+        if (hired == false)
+        {
+            curState = State.follow;
+        }
     }
 
     protected void UpdateFollowState()
@@ -135,6 +141,7 @@ public class Heavy : MonoBehaviour
 
             if (dist <= 5.0f)
             {
+                healFlash();
                 enchanted = true;
                 health += 100;
                 enemyAgent.speed = 6.0f;
@@ -181,6 +188,9 @@ public class Heavy : MonoBehaviour
         playerTransform.gameObject.SendMessage("GiveEXP", (int)exp_worth);
         scoreManager.GetComponent<ScoreManager>().AddToScore(score_worth);
         SpawnManager.GetComponent<SpawnManager>().curEliteNum -= 1;
+
+        GameObject Blood = (GameObject)Instantiate(blood, transform.position, Quaternion.identity);
+        blood.transform.parent = null;
         Destroy(gameObject);
     }
 
@@ -234,9 +244,22 @@ public class Heavy : MonoBehaviour
         }
     }
 
+    public IEnumerator resetVelocity()
+    {
+        yield return new WaitForSeconds(0.1f);
+        GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+    }
+
     public IEnumerator Flash()
     {
         sprite.color = Color.red;
+        yield return new WaitForSeconds(0.1f);
+        sprite.color = Color.white;
+    }
+
+    public IEnumerator healFlash()
+    {
+        sprite.color = Color.green;
         yield return new WaitForSeconds(0.1f);
         sprite.color = Color.white;
     }

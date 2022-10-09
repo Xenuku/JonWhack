@@ -55,6 +55,7 @@ public class Support : MonoBehaviour
     public GameObject bulletSpawnPoint;
     public GameObject sword;
     public GameObject shield;
+    public GameObject blood;
 
 
     // Start is called before the first frame update
@@ -91,7 +92,6 @@ public class Support : MonoBehaviour
     void Update()
     {
         timeElapsed += Time.deltaTime;
-        
 
         Vector3 bodyScale = new Vector3(0.04f, 0.04f, 0);
         if (playerTransform.position.x >= transform.position.x)
@@ -146,6 +146,11 @@ public class Support : MonoBehaviour
                 SHOOTBULLET();
             }
         }
+
+        if (hired == false)
+        {
+            curState = State.follow;
+        }
     }
 
     protected void UpdateFollowState()
@@ -159,6 +164,7 @@ public class Support : MonoBehaviour
             
             if (dist <= 5.0f)
             {
+                healFlash();
                 enchanted = true;
                 health += 50;
                 enemyAgent.speed = 7.0f;
@@ -267,12 +273,26 @@ public class Support : MonoBehaviour
         sprite.color = Color.white;
     }
 
+    public IEnumerator resetVelocity()
+    {
+        yield return new WaitForSeconds(0.1f);
+        GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+    }
+
+    public IEnumerator healFlash()
+    {
+        sprite.color = Color.green;
+        yield return new WaitForSeconds(0.1f);
+        sprite.color = Color.white;
+    }
+
     protected void UpdateDeadState()
     {
         playerTransform.gameObject.SendMessage("GiveEXP", (int)exp_worth);
         scoreManager.GetComponent<ScoreManager>().AddToScore(score_worth);
         SpawnManager.GetComponent<SpawnManager>().curEliteNum -= 1;
 
+        GameObject Blood = (GameObject)Instantiate(blood, transform.position, Quaternion.identity);
         Destroy(sword.gameObject);
         Destroy(shield.gameObject);
         Destroy(buildingSpawnPoint1.gameObject);
@@ -280,6 +300,7 @@ public class Support : MonoBehaviour
         Destroy(buildingSpawnPoint3.gameObject);
         Destroy(buildingSpawnPoint4.gameObject);
         transform.DetachChildren();
+
         Destroy(gameObject);
     }
 

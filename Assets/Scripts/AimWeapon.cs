@@ -18,6 +18,11 @@ public class AimWeapon : MonoBehaviour
     public SpriteRenderer Hand1;
     public SpriteRenderer Hand2;
 
+    private Vector2 carmeraPos;
+    public GameObject carmera;
+
+    public AudioSource musicPlayer;
+    public AudioClip audios;
 
     private void Awake()
     {
@@ -75,13 +80,22 @@ public class AimWeapon : MonoBehaviour
             {
                 elapsedTime = 0.0f;
                 Vector3 mouseP = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                Vector2 direction = (Vector2)((mouseP - transform.position));
+                Vector3 direction = (Vector3)((mouseP - transform.position));
                 direction.Normalize();
                 GameObject baseBullet = (GameObject)Instantiate(
                                     pBullet,
                                     endGunPoint.transform.position + (Vector3)(direction * 0.5f),
                                     Quaternion.identity);
+
                 baseBullet.GetComponent<Rigidbody2D>().velocity = direction * bulletSpeed;
+                pBullet.GetComponent<PlayerBullet>().knockDirection = direction;
+
+                carmera.SendMessage("shake");
+                carmera.SendMessage("shake");
+                carmera.SendMessage("shake");
+
+                musicPlayer.clip = audios;
+                musicPlayer.Play();
             }
         }
 

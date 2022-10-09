@@ -32,6 +32,7 @@ public class MeleeEnemy : MonoBehaviour
     public GameObject scoreManager;
     private Transform playerTransform;
     private GameObject SpawnManager;
+    public GameObject blood;
 
     //AI
     public UnityEngine.AI.NavMeshAgent enemyAgent;
@@ -140,6 +141,7 @@ public class MeleeEnemy : MonoBehaviour
 
             if (dist <= 5.0f)
             {
+                healFlash();
                 enchanted = true;
                 health += 50;
                 sword.SetActive(true);
@@ -166,6 +168,9 @@ public class MeleeEnemy : MonoBehaviour
         playerTransform.gameObject.SendMessage("GiveEXP", (int)exp_worth);
         scoreManager.GetComponent<ScoreManager>().AddToScore(score_worth);
         SpawnManager.GetComponent<SpawnManager>().curEnemyNum -= 1;
+
+        GameObject Blood = (GameObject)Instantiate(blood, transform.position, Quaternion.identity);
+        blood.transform.parent = null;
         Destroy(gameObject);
     }
 
@@ -181,6 +186,17 @@ public class MeleeEnemy : MonoBehaviour
     public IEnumerator Flash()
     {
         sprite.color = Color.red;
+        yield return new WaitForSeconds(0.1f);
+        sprite.color = Color.white;
+    }
+    public IEnumerator resetVelocity()
+    {
+        yield return new WaitForSeconds(0.1f);
+        GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+    }
+    public IEnumerator healFlash()
+    {
+        sprite.color = Color.green;
         yield return new WaitForSeconds(0.1f);
         sprite.color = Color.white;
     }

@@ -22,9 +22,10 @@ TagManager:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Bullets
   - Water
   - UI
+  - NPCs&Player
   - 
   - 
   - 
@@ -50,7 +51,6 @@ TagManager:
   - 
   - 
   - 
-  - Enemies
   m_SortingLayers:
   - name: Default
     uniqueID: 0

@@ -41,6 +41,7 @@ public class Sniper : MonoBehaviour
     private GameObject scoreManager;
     public GameObject sword;
     public GameObject shield;
+    public GameObject blood;
 
     //AI
     public UnityEngine.AI.NavMeshAgent enemyAgent;
@@ -122,7 +123,12 @@ public class Sniper : MonoBehaviour
         {
             animator.SetBool("IsAttack", true);
             SHOOTBULLET();
-        } 
+        }
+
+        if (hired == false)
+        {
+            curState = State.follow;
+        }
     }
 
     protected void UpdateFollowState()
@@ -136,6 +142,7 @@ public class Sniper : MonoBehaviour
 
             if (dist <= 5.0f)
             {
+                healFlash();
                 enchanted = true;
                 health += 50;
                 enemyAgent.speed = 5.0f;
@@ -181,6 +188,9 @@ public class Sniper : MonoBehaviour
         playerTransform.gameObject.SendMessage("GiveEXP", (int)exp_worth);
         SpawnManager.GetComponent<SpawnManager>().curEnemyNum -= 1;
         scoreManager.GetComponent<ScoreManager>().AddToScore(score_worth);
+
+        GameObject Blood = (GameObject)Instantiate(blood, transform.position, Quaternion.identity);
+        blood.transform.parent = null;
         Destroy(gameObject);
     }
    
@@ -221,6 +231,17 @@ public class Sniper : MonoBehaviour
 
             elapsedTime = 0.0f;
         }
+    }
+    public IEnumerator healFlash()
+    {
+        sprite.color = Color.green;
+        yield return new WaitForSeconds(0.1f);
+        sprite.color = Color.white;
+    }
+    public IEnumerator resetVelocity()
+    {
+        yield return new WaitForSeconds(0.1f);
+        GetComponent<Rigidbody2D>().velocity = Vector2.zero;
     }
 
     public IEnumerator Flash()

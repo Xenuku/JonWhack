@@ -193,11 +193,11 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1247954624101167252}
-  m_BodyType: 1
+  m_BodyType: 0
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
+  m_Mass: 10
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 0
@@ -265,6 +265,8 @@ MonoBehaviour:
   AttackSlot1: {fileID: 1247954622834163495}
   AttackSlot2: {fileID: 1247954623624345668}
   AttackSlot3: {fileID: 1247954623209644336}
+  sprite: {fileID: 1247954624101167262}
+  blood: {fileID: 8246018672008376782, guid: 649e46d3f2b9abf4da099c3311858ab4, type: 3}
   curAirSupport: 0
   maxAirSupport: 3
   AirSupport: {fileID: 3844107045066724437, guid: 93cb8a09de7adf1418c379f7d91de533, type: 3}

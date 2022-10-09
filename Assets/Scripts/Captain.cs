@@ -17,7 +17,7 @@ public class Captain : MonoBehaviour
     public int score_worth;
 
     //system
-    protected float timeElapsed = 0.0f;
+    protected float timeElapsed = 20.0f;
 
     //enemy data
     public int health;
@@ -35,10 +35,11 @@ public class Captain : MonoBehaviour
     public GameObject AttackSlot2;
     public GameObject AttackSlot3;
 
-    private Transform hire1;
-    private Transform hire2;
-    private Transform hire3;
+    private GameObject hire1;
+    private GameObject hire2;
+    private GameObject hire3;
     public SpriteRenderer sprite;
+    public GameObject blood;
 
 
     // Start is called before the first frame update
@@ -115,8 +116,20 @@ public class Captain : MonoBehaviour
         animator.SetBool("IsAttack", true);
 
         Hire();
-        airSupport();
 
+        if(timeElapsed >= 30.0f)
+        {
+            airSupport();
+
+            hire1.GetComponent<Sniper>().health += 50;
+            hire1.SendMessage("healFlash");
+            hire2.GetComponent<Heavy>().health += 80;
+            hire2.SendMessage("healFlash");
+            hire3.GetComponent<Support>().health += 60;
+            hire3.SendMessage("healFlash");
+
+            timeElapsed = 0.0f;
+        }
 
         if (dist >= attackRange)
         {
@@ -129,6 +142,13 @@ public class Captain : MonoBehaviour
         playerTransform.gameObject.SendMessage("GiveEXP", (int)exp_worth);
         scoreManager.GetComponent<ScoreManager>().AddToScore(score_worth);
         SpawnManager.GetComponent<SpawnManager>().curCaptainNum -= 1;
+
+        hire1.GetComponent<Sniper>().hired = false;
+        hire2.GetComponent<Heavy>().hired = false;
+        hire3.GetComponent<Support>().hired = false;
+
+        GameObject Blood = (GameObject)Instantiate(blood, transform.position, Quaternion.identity);
+        blood.transform.parent = null;
         Destroy(gameObject);
     }
 
@@ -152,11 +172,13 @@ public class Captain : MonoBehaviour
             playerDistance = Vector2.Distance(spawnPosition, playerTransform.position);
         }
 
-        if (curAirSupport < maxAirSupport)
+        if (curAirSupport == 0)
         {
-            GameObject Support = (GameObject)Instantiate(AirSupport, spawnPosition, Quaternion.identity);
+            GameObject Airplane1 = (GameObject)Instantiate(AirSupport, spawnPosition, Quaternion.identity);
+            GameObject Airplane2 = (GameObject)Instantiate(AirSupport, spawnPosition, Quaternion.identity);
+            GameObject Airplane3 = (GameObject)Instantiate(AirSupport, spawnPosition, Quaternion.identity);
 
-            curAirSupport += 1;
+            curAirSupport += 3;
         }
     }
 
@@ -164,29 +186,32 @@ public class Captain : MonoBehaviour
     {
         if (GameObject.FindWithTag("Sniper") != null)
         {
-            hire1 = GameObject.FindWithTag("Sniper").transform;
-            hire1.GetComponent<Sniper>().hired = true;
-            hire1.GetComponent<Sniper>().health += 50;
+            hire1 = GameObject.FindWithTag("Sniper");
+            hire1.GetComponent<Sniper>().hired = true;         
             hire1.GetComponent<Sniper>().battlePosition = AttackSlot1.transform.position;
         }
 
         if (GameObject.FindWithTag("Heavy") != null)
         {
-            hire2 = GameObject.FindWithTag("Heavy").transform;
+            hire2 = GameObject.FindWithTag("Heavy");
             hire2.GetComponent<Heavy>().hired = true;
-            hire2.GetComponent<Heavy>().health += 80;
             hire2.GetComponent<Heavy>().battlePosition = AttackSlot2.transform.position;
         }
 
         if (GameObject.FindWithTag("Support") != null)
         {
-            hire3 = GameObject.FindWithTag("Support").transform;
+            hire3 = GameObject.FindWithTag("Support");
             hire3.GetComponent<Support>().hired = true;
-            hire3.GetComponent<Support>().health += 60;
             hire3.GetComponent<Support>().battlePosition = AttackSlot3.transform.position;
         }
     }
-     public IEnumerator Flash()
+
+    public IEnumerator resetVelocity()
+    {
+        yield return new WaitForSeconds(0.1f);
+        GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+    }
+    public IEnumerator Flash()
     {
         sprite.color = Color.red;
         yield return new WaitForSeconds(0.1f);

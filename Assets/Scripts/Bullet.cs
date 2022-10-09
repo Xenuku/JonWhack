@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
 public class Bullet : MonoBehaviour
 {
@@ -9,10 +8,6 @@ public class Bullet : MonoBehaviour
     public float speed;
     public float lifeTime;
     private Vector2 newPos;
-
-    private GameObject slot1;
-
-    private Vector3Int contact;
 
     public enum EnemyTypes 
     {
@@ -23,6 +18,8 @@ public class Bullet : MonoBehaviour
     void Start()
     {
         Destroy(gameObject, lifeTime);
+
+
     }
 
     // Update is called once per frame
@@ -45,4 +42,5 @@ public class Bullet : MonoBehaviour
                 break;
         }
     }
+
 }

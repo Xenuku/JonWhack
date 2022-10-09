@@ -267,11 +267,11 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6656840251626898605}
-  m_BodyType: 1
+  m_BodyType: 0
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
+  m_Mass: 12
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 0
@@ -304,6 +304,7 @@ MonoBehaviour:
   shield: {fileID: 6656840251349569260}
   sprite: {fileID: 6656840251626898602}
   scoreManager: {fileID: 0}
+  blood: {fileID: 8246018672008376782, guid: 649e46d3f2b9abf4da099c3311858ab4, type: 3}
   enemyAgent: {fileID: 6656840251626898596}
 --- !u!70 &6656840251626898607
 CapsuleCollider2D:

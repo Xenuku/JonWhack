@@ -35,7 +35,7 @@ public class Sniper : MonoBehaviour
     public Vector2 battlePosition;
     public SpriteRenderer sprite;
     public Animator animator;
-    public GameObject Enhencedbullet;
+    public GameObject enhencedbullet;
     public GameObject bullet;
     public GameObject bulletSpawnPoint;  
     private GameObject scoreManager;
@@ -130,7 +130,7 @@ public class Sniper : MonoBehaviour
         {
             //enemy will shoot bullets no matter har far players at
             animator.SetBool("IsAttack", true);
-            SHOOTBULLET();
+            ShootBullet();
         }
 
         //back to follow if captain dead
@@ -180,16 +180,9 @@ public class Sniper : MonoBehaviour
     {
         dist = Vector2.Distance(transform.position, playerTransform.position);
         animator.SetBool("IsAttack", true);
-       
+
         //shoots enchanted bullets after enchant
-        if (enchanted == false)
-        {
-            ShootBullet();
-        }
-        else
-        {
-            SHOOTBULLET();
-        }
+        ShootBullet();
 
         if (dist > attackRange)
         {
@@ -208,45 +201,45 @@ public class Sniper : MonoBehaviour
         blood.transform.parent = null;
         Destroy(gameObject);
     }
-   
+
     private void ShootBullet()
     {
         if (elapsedTime >= shootRate)
         {
             if ((bullet))
             {
-                Vector2 direction = (Vector2)((playerTransform.position - transform.position));
-                direction.Normalize();
-                GameObject Bullet = (GameObject)Instantiate(
-                                    bullet,
-                                    bulletSpawnPoint.transform.position + (Vector3)(direction * 0.5f),
-                                    Quaternion.identity);
-                Bullet.GetComponent<Rigidbody2D>().velocity = direction * 20.0f;
-            }
-            elapsedTime = 0.0f;
-        }
-    }
+                if (enchanted == false)
+                {
+                    Vector2 direction = (Vector2)((playerTransform.position - transform.position));
+                    direction.Normalize();
 
-    private void SHOOTBULLET()
-    {
-        if (elapsedTime >= shootRate)
-        {
-            if ((bullet))
-            {
-                Vector2 direction = (Vector2)((playerTransform.position - transform.position));
-                direction.Normalize();
+                    GameObject Bullet = (GameObject)Instantiate(
+                                        bullet,
+                                        bulletSpawnPoint.transform.position + (Vector3)(direction * 0.5f),
+                                        Quaternion.identity);
 
-                GameObject Bullet = (GameObject)Instantiate(
-                                    Enhencedbullet,
-                                    bulletSpawnPoint.transform.position + (Vector3)(direction * 0.5f),
-                                    Quaternion.identity);
+                    Bullet.GetComponent<Rigidbody2D>().velocity = direction * 10.0f;
+                }
+                else if (enchanted == true)
+                {
+                    Vector2 direction = (Vector2)((playerTransform.position - transform.position));
+                    direction.Normalize();
 
-                Bullet.GetComponent<Rigidbody2D>().velocity = direction * 5.0f;
+                    GameObject Bullet = (GameObject)Instantiate(
+                                        enhencedbullet,
+                                        bulletSpawnPoint.transform.position + (Vector3)(direction * 0.5f),
+                                        Quaternion.identity);
+
+                    Bullet.GetComponent<Rigidbody2D>().velocity = direction * 5.0f;
+                }
+
             }
 
             elapsedTime = 0.0f;
         }
     }
+
+
     //flash green for heals
     public IEnumerator healFlash()
     {

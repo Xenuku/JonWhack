@@ -44,7 +44,7 @@ public class Heavy : MonoBehaviour
     public SpriteRenderer sprite;
     public GameObject sword;
     public GameObject shield;
-    public GameObject Enhencedbullet;
+    public GameObject enhencedbullet;
     public GameObject blood;
 
     // Start is called before the first frame update
@@ -127,7 +127,7 @@ public class Heavy : MonoBehaviour
         {
             //enemy will shoot bullets no matter har far players at
             animator.SetBool("IsAttack", true);
-            SHOOTBULLET();
+            ShootBullet();
         }
 
         //back to follow if captain dead
@@ -179,14 +179,8 @@ public class Heavy : MonoBehaviour
         animator.SetBool("IsAttack", true);
 
         //shoots enchanted bullets after enchant
-        if (enchanted == false)
-        {
-            ShootBullet();
-        }
-        else
-        {
-            SHOOTBULLET();
-        }
+        ShootBullet();
+
 
         if (dist > attackRange)
         {
@@ -212,36 +206,31 @@ public class Heavy : MonoBehaviour
         {
             if ((bullet))
             {
-                Vector2 direction = (Vector2)((playerTransform.position - transform.position));
-                direction.Normalize();
+                if(enchanted == false)
+                {
+                    Vector2 direction = (Vector2)((playerTransform.position - transform.position));
+                    direction.Normalize();
 
-                GameObject Bullet = (GameObject)Instantiate(
-                                    bullet,
-                                    bulletSpawnPoint.transform.position + (Vector3)(direction * 0.5f),
-                                    Quaternion.identity);
+                    GameObject Bullet = (GameObject)Instantiate(
+                                        bullet,
+                                        bulletSpawnPoint.transform.position + (Vector3)(direction * 0.5f),
+                                        Quaternion.identity);
 
-                Bullet.GetComponent<Rigidbody2D>().velocity = direction * 10.0f;
-            }
+                    Bullet.GetComponent<Rigidbody2D>().velocity = direction * 10.0f;
+                }
+                else if (enchanted == true)
+                {
+                    Vector2 direction = (Vector2)((playerTransform.position - transform.position));
+                    direction.Normalize();
 
-            timeElapsed = 0.0f;
-        }
-    }
+                    GameObject Bullet = (GameObject)Instantiate(
+                                        enhencedbullet,
+                                        bulletSpawnPoint.transform.position + (Vector3)(direction * 0.5f),
+                                        Quaternion.identity);
 
-    private void SHOOTBULLET()
-    {
-        if (timeElapsed >= shootRate)
-        {
-            if ((bullet))
-            {
-                Vector2 direction = (Vector2)((playerTransform.position - transform.position));
-                direction.Normalize();
-
-                GameObject Bullet = (GameObject)Instantiate(
-                                    Enhencedbullet,
-                                    bulletSpawnPoint.transform.position + (Vector3)(direction * 0.5f),
-                                    Quaternion.identity);
-
-                Bullet.GetComponent<Rigidbody2D>().velocity = direction * 5.0f;
+                    Bullet.GetComponent<Rigidbody2D>().velocity = direction * 5.0f;
+                }
+      
             }
 
             timeElapsed = 0.0f;

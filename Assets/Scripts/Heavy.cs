@@ -57,7 +57,7 @@ public class Heavy : MonoBehaviour
         Dead = false;
         score_worth = exp_worth * 2;
 
-        //Navmesh
+        //setup AI setting, locked rotation because this is a 2D game
         enemyAgent = GetComponent<NavMeshAgent>();
         enemyAgent.updateRotation = false;
         enemyAgent.updateUpAxis = false;
@@ -78,6 +78,7 @@ public class Heavy : MonoBehaviour
     {
         timeElapsed += Time.deltaTime;
 
+        //enemy always facing player
         Vector3 bodyScale = new Vector3(0.04f, 0.04f, 0);
         if (playerTransform.position.x >= transform.position.x)
         {
@@ -97,7 +98,8 @@ public class Heavy : MonoBehaviour
             case State.hired: UpdateHiredState(); break;
         }
 
-        if (hired == true)
+        //if enemy is hired he will go to hired state
+        if (hired == true && health > 0)
         {
             curState = State.hired;
         }
@@ -114,16 +116,21 @@ public class Heavy : MonoBehaviour
         enemyAgent.SetDestination(battlePosition);
         enemyAgent.stoppingDistance = 1.0f;
 
+        //enemy will only stay in his battle position after get hired
+
+        //play idle animation when they are within the battle position
         if (dist >= 1.0f)
         {
             animator.SetBool("IsAttack", false);
         }
         else
         {
+            //enemy will shoot bullets no matter har far players at
             animator.SetBool("IsAttack", true);
             SHOOTBULLET();
         }
 
+        //back to follow if captain dead
         if (hired == false)
         {
             curState = State.follow;
@@ -133,6 +140,8 @@ public class Heavy : MonoBehaviour
     protected void UpdateFollowState()
     {
         animator.SetBool("IsAttack", false);
+
+        //looking for suppport center if selected as target
 
         if (enchantLooking == true && enchanted == false)
         {
@@ -145,6 +154,8 @@ public class Heavy : MonoBehaviour
                 enchanted = true;
                 health += 100;
                 enemyAgent.speed = 6.0f;
+
+                //cute icons on indicate they are enchanted
                 sword.SetActive(true);
                 shield.SetActive(true);
             }
@@ -167,7 +178,7 @@ public class Heavy : MonoBehaviour
         dist = Vector2.Distance(transform.position, playerTransform.position);
         animator.SetBool("IsAttack", true);
 
-
+        //shoots enchanted bullets after enchant
         if (enchanted == false)
         {
             ShootBullet();
@@ -189,6 +200,7 @@ public class Heavy : MonoBehaviour
         scoreManager.GetComponent<ScoreManager>().AddToScore(score_worth);
         SpawnManager.GetComponent<SpawnManager>().curEliteNum -= 1;
 
+        //de-attach blood effects from this enemy so it can finish playing after destory
         GameObject Blood = (GameObject)Instantiate(blood, transform.position, Quaternion.identity);
         blood.transform.parent = null;
         Destroy(gameObject);
@@ -236,6 +248,7 @@ public class Heavy : MonoBehaviour
         }
     }
 
+    //deal melee damage to player upon collision
     void OnCollisionStay2D(Collision2D other)
     {
         if (other.collider.gameObject.tag == "Player")
@@ -244,12 +257,14 @@ public class Heavy : MonoBehaviour
         }
     }
 
+    //reset velocity after knockback effects
     public IEnumerator resetVelocity()
     {
         yield return new WaitForSeconds(0.1f);
         GetComponent<Rigidbody2D>().velocity = Vector2.zero;
     }
 
+    //flash red for damages
     public IEnumerator Flash()
     {
         sprite.color = Color.red;
@@ -257,6 +272,7 @@ public class Heavy : MonoBehaviour
         sprite.color = Color.white;
     }
 
+    //flash green for heals
     public IEnumerator healFlash()
     {
         sprite.color = Color.green;

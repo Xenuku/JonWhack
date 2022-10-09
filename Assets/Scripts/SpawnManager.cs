@@ -17,13 +17,16 @@ public class SpawnManager : MonoBehaviour
     public int addElite;
     public int addCaptain;
 
+    //music player
     public AudioSource musicPlayer;
     public List<AudioClip> audios;
 
+    //enemy lists
     public GameObject[] EnemyTypes;
     public GameObject[] EliteEnemyTypes;
     public GameObject Captain;
 
+    //some references variable
     private float timeElapsed = 0.0f;
     private int playerLevel;
     private float playerDistance;
@@ -34,6 +37,7 @@ public class SpawnManager : MonoBehaviour
 
     public TMP_Text difficultyText;
 
+    //4 difficulty according to player level
     public enum State
     {
         difficulty1,
@@ -46,6 +50,7 @@ public class SpawnManager : MonoBehaviour
 
     void Start()
     {
+        //on start, initial level is difficulty1, loop index 0 music in the list
         curState = State.difficulty1;
 
         curEliteNum = 0;
@@ -71,6 +76,8 @@ public class SpawnManager : MonoBehaviour
             case State.boss: Boss(); break;
         }
 
+        //difficulty1: level 1, difficulty2: level 2-4
+        //difficulty3: level 4-7, boss: level >= 7
         if (playerLevel >= 2 && playerLevel < 4)
         {
             curState = State.difficulty2;
@@ -87,12 +94,14 @@ public class SpawnManager : MonoBehaviour
 
     protected void Difficulty1()
     {
+        //no add-on enemies on first difficulty
         addNormal = 0;
         addElite = 0;
         difficultyText.text = "Threat Level: <color=\"green\">Low</color>";
         SpawnEnemy();
     }
 
+    //added more enemy for 2nd difficulty
     protected void Difficulty2()
     {
         addNormal = 10;
@@ -101,7 +110,10 @@ public class SpawnManager : MonoBehaviour
         SpawnEnemy();
     }
 
+    //setup bool for prevent repeating setup musics
     private bool bossTheme = false;
+
+    //new music for difficulty3
     protected void Difficulty3()
     {
         if(bossTheme == false)
@@ -115,6 +127,7 @@ public class SpawnManager : MonoBehaviour
         addElite = 6;
         difficultyText.text = "Threat Level: <color=\"red\">High</color>";
         SpawnEnemy();
+        //spawn captain start from this difficulty
         SpawnCaptain();
     }
 
@@ -129,14 +142,18 @@ public class SpawnManager : MonoBehaviour
 
     void SpawnEnemy()
     {
+        //random enemy selected each generation
         int ranElite = Random.Range(0, EliteEnemyTypes.Length);
         int ranEnemy = Random.Range(0, EnemyTypes.Length);
 
+        //random spawn position within 50.0f from center of camera
         spawnPosition.x = Random.Range(Camera.main.transform.position.x - 50.0f, Camera.main.transform.position.x + 50.0f);
         spawnPosition.y = Random.Range(Camera.main.transform.position.y - 50.0f, Camera.main.transform.position.y + 50.0f);
 
+        //update player distance for future use
         playerDistance = Vector2.Distance(spawnPosition, player.transform.position);
 
+        //re-generate if distance to close to player
         while (playerDistance <= 30.0f)
         {
             spawnPosition.x = Random.Range(Camera.main.transform.position.x - 50.0f, Camera.main.transform.position.x + 50.0f);
@@ -144,6 +161,7 @@ public class SpawnManager : MonoBehaviour
             playerDistance = Vector2.Distance(spawnPosition, player.transform.position);
         }
 
+        //if currrent enemy number is lower than maximum, generat more enemy until maximum
         if (curEnemyNum < maxEnemyNum + addNormal)
         {
             GameObject enmeies = (GameObject)Instantiate(EnemyTypes[ranEnemy], spawnPosition, Quaternion.identity);

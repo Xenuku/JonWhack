@@ -71,7 +71,7 @@ public class Support : MonoBehaviour
         SpawnManager = GameObject.Find("SpawnManager");
         curState = State.follow;
 
-        //Navmesh
+        //Navmesh agents setting, this is a 2d game so some properties need to be locked
         enemyAgent = GetComponent<UnityEngine.AI.NavMeshAgent>();
         enemyAgent.updateRotation = false;
         enemyAgent.updateUpAxis = false;
@@ -93,6 +93,7 @@ public class Support : MonoBehaviour
     {
         timeElapsed += Time.deltaTime;
 
+        //enemy always facing player
         Vector3 bodyScale = new Vector3(0.04f, 0.04f, 0);
         if (playerTransform.position.x >= transform.position.x)
         {
@@ -113,7 +114,8 @@ public class Support : MonoBehaviour
             case State.hired: UpdateHiredState(); break;
         }
 
-        if (hired == true)
+        //if support is hired he will go to hired state
+        if (hired == true && health > 0)
         {
             curState = State.hired;
         }
@@ -130,23 +132,29 @@ public class Support : MonoBehaviour
         enemyAgent.SetDestination(battlePosition);
         enemyAgent.stoppingDistance = 1.0f;
 
+        //enemy will only stay in his battle position after get hired
+        //Support will setup buildings first if he didnt do that before
+
         if (setup == false)
         {
             SetBuildings();
         }
         else
         {
+            //play idle animation when they are within the battle position
             if (dist >= 1.0f)
             {
                 animator.SetBool("IsAttack", false);
             }
             else
             {
+                //enemy will shoot bullets no matter har far players at
                 animator.SetBool("IsAttack", true);
                 SHOOTBULLET();
             }
         }
 
+        //back to follow if captain dead
         if (hired == false)
         {
             curState = State.follow;
@@ -157,6 +165,7 @@ public class Support : MonoBehaviour
     {
         animator.SetBool("IsAttack", false);
 
+        //looking for enchant if selected as target
         if (enchantLooking == true && enchanted == false)
         {
             dist = Vector2.Distance(transform.position, centerTransform);
@@ -168,6 +177,8 @@ public class Support : MonoBehaviour
                 enchanted = true;
                 health += 50;
                 enemyAgent.speed = 7.0f;
+
+                //cute icons on
                 sword.SetActive(true);
                 shield.SetActive(true);
             }
@@ -187,15 +198,18 @@ public class Support : MonoBehaviour
 
     protected void UpdateAttackState()
     {
+        //setup distance variable and put animation into idle
         dist = Vector2.Distance(transform.position, playerTransform.position);
         animator.SetBool("IsAttack", true);
         
+        //if support havent done setup buildings he will set buildings first
         if (setup == false)
         {
             SetBuildings();
         }
         else
         {
+            //otherwise this enemy works similar to a sniper
             if (enchanted == false)
             {
                 ShootBullet();
@@ -206,12 +220,14 @@ public class Support : MonoBehaviour
             }
         }
 
+        //switch back to follow mode
         if (dist > attackRange)
         {
             curState = State.follow;
         }
     }
 
+    //buildings are setup on their designed positions
     private void SetBuildings()
     {
         GameObject building1 = (GameObject)Instantiate(center, transform.position, Quaternion.identity);
@@ -265,7 +281,7 @@ public class Support : MonoBehaviour
         }
     }
 
-
+    //flash red for damage taken
     public IEnumerator Flash()
     {
         sprite.color = Color.red;
@@ -273,12 +289,14 @@ public class Support : MonoBehaviour
         sprite.color = Color.white;
     }
 
+    //reset velocity after taken knockback
     public IEnumerator resetVelocity()
     {
         yield return new WaitForSeconds(0.1f);
         GetComponent<Rigidbody2D>().velocity = Vector2.zero;
     }
 
+    //flash green for heal taken
     public IEnumerator healFlash()
     {
         sprite.color = Color.green;
@@ -288,17 +306,21 @@ public class Support : MonoBehaviour
 
     protected void UpdateDeadState()
     {
+        //update EXP, score, current enemy number to system
         playerTransform.gameObject.SendMessage("GiveEXP", (int)exp_worth);
         scoreManager.GetComponent<ScoreManager>().AddToScore(score_worth);
         SpawnManager.GetComponent<SpawnManager>().curEliteNum -= 1;
 
+        //generate blood on death
         GameObject Blood = (GameObject)Instantiate(blood, transform.position, Quaternion.identity);
+        //destory unwantted objects, because wall and center are chlidren of supports
         Destroy(sword.gameObject);
         Destroy(shield.gameObject);
         Destroy(buildingSpawnPoint1.gameObject);
         Destroy(buildingSpawnPoint2.gameObject);
         Destroy(buildingSpawnPoint3.gameObject);
         Destroy(buildingSpawnPoint4.gameObject);
+        //de-attach walls and centers from support so they can work independetly without get destoryed
         transform.DetachChildren();
 
         Destroy(gameObject);

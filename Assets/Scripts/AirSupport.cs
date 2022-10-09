@@ -18,6 +18,7 @@ public class AirSupport : MonoBehaviour
     {
         playerTransform = GameObject.Find("Player").transform;
 
+        //setup navmesh AI, because this is a 2D game so some variables need to be locked
         enemyAgent = GetComponent<UnityEngine.AI.NavMeshAgent>();
         enemyAgent.updateRotation = false;
         enemyAgent.updateUpAxis = false;
@@ -28,6 +29,7 @@ public class AirSupport : MonoBehaviour
     {
         timeElapsed += Time.deltaTime;
 
+        //rendersprite always facing player
         Vector3 bodyScale = transform.localScale;
         if (playerTransform.position.x >= transform.position.x)
         {
@@ -38,12 +40,14 @@ public class AirSupport : MonoBehaviour
             sprite.flipY = true;
         }
 
+        //this enemy always chasing player
         enemyAgent.SetDestination(playerTransform.position);
 
         transform.localScale = bodyScale;
 
         if (timeElapsed >= 10.0f || health <= 0)
         {
+            //flash 3 times upon reaching lifetime limit, also send a message to captain say hes dead
             Flash();
             Flash();
             Flash();
@@ -51,6 +55,8 @@ public class AirSupport : MonoBehaviour
             Destroy(gameObject, 2.0f);
         }
     }
+
+    //do collision damage to player
     void OnCollisionStay2D(Collision2D other)
     {
         if (other.collider.gameObject.tag == "Player")
@@ -60,12 +66,14 @@ public class AirSupport : MonoBehaviour
         }
     }
 
+    //reset velocity after knockback 
     public IEnumerator resetVelocity()
     {
         yield return new WaitForSeconds(0.1f);
         GetComponent<Rigidbody2D>().velocity = Vector2.zero;
     }
 
+    //flash effects for damage taken
     public IEnumerator Flash()
     {
         sprite.color = Color.red;

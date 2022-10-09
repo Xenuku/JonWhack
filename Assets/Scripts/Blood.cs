@@ -12,6 +12,8 @@ public class Blood : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        //play blood blast sound D:
+        //also destory gameobject before animation play 2nd time
         musicPlayer.clip = audios;
         musicPlayer.Play();
 

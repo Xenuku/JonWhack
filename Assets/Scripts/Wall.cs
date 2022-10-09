@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Wall : MonoBehaviour
 {
-    public int health = 100;
+    public int health;
     public SpriteRenderer sprite;
 
     // Start is called before the first frame update
@@ -16,12 +16,14 @@ public class Wall : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //destory wall when health <= 0
         if (health <= 0)
         {
             Destroy(gameObject);
         }
     }
 
+    //flash upon damages
     public IEnumerator Flash()
     {
         sprite.color = Color.red;

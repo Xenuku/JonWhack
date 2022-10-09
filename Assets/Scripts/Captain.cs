@@ -5,7 +5,7 @@ using UnityEngine.AI;
 
 public class Captain : MonoBehaviour
 {
-    //AI related
+    //AI related variables
     public enum State
     {
         follow,
@@ -50,7 +50,7 @@ public class Captain : MonoBehaviour
         SpawnManager = GameObject.Find("SpawnManager");
         curState = State.follow;
 
-        //Navmesh
+        //setup navmesh AI, because this is a 2D game so some variables need to be locked
         enemyAgent = GetComponent<UnityEngine.AI.NavMeshAgent>();
         enemyAgent.updateRotation = false;
         enemyAgent.updateUpAxis = false;
@@ -69,9 +69,11 @@ public class Captain : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //setup distance for future use
         dist = Vector2.Distance(transform.position, playerTransform.position);
         timeElapsed += Time.deltaTime;
 
+        //spriterender always facing player
         Vector3 bodyScale = new Vector3(0.04f, 0.04f, 0);
         if (playerTransform.position.x >= transform.position.x)
         {
@@ -90,6 +92,7 @@ public class Captain : MonoBehaviour
             case State.attack: UpdateAttackState(); break;
         }
 
+        //switch to death state if health lower than 0 in any frame
         if (health <= 0)
         {
             curState = State.dead;
@@ -98,10 +101,13 @@ public class Captain : MonoBehaviour
 
     protected void UpdateFollowState()
     {
+        //setup captain animation as walking
         animator.SetBool("IsAttack", false);
 
+        //set navmesh destination as play
         enemyAgent.SetDestination(playerTransform.position);
 
+        //hire enemies into battle squad
         Hire();
 
         // Switch to attack if in range
@@ -113,14 +119,19 @@ public class Captain : MonoBehaviour
 
     protected void UpdateAttackState()
     {
+        //set captain attack animation on
         animator.SetBool("IsAttack", true);
 
+        //continue hire enemies if current position is empty
         Hire();
 
+        //if captain's ability finished cool down
         if(timeElapsed >= 30.0f)
         {
+            //call air supports to attack player 
             airSupport();
 
+            //give squad member healings and trigger their healing flash effects
             hire1.GetComponent<Sniper>().health += 50;
             hire1.SendMessage("healFlash");
             hire2.GetComponent<Heavy>().health += 80;
@@ -128,9 +139,11 @@ public class Captain : MonoBehaviour
             hire3.GetComponent<Support>().health += 60;
             hire3.SendMessage("healFlash");
 
+            //reset skills cooldown
             timeElapsed = 0.0f;
         }
 
+        //switch back to follow state if out of attackRange
         if (dist >= attackRange)
         {
             curState = State.follow;
@@ -139,18 +152,23 @@ public class Captain : MonoBehaviour
 
     protected void UpdateDeadState()
     {
+        //update EXP, score, current enemy number to system
         playerTransform.gameObject.SendMessage("GiveEXP", (int)exp_worth);
         scoreManager.GetComponent<ScoreManager>().AddToScore(score_worth);
         SpawnManager.GetComponent<SpawnManager>().curCaptainNum -= 1;
 
+        //let squad member know he's dead and they are no longer members
         hire1.GetComponent<Sniper>().hired = false;
         hire2.GetComponent<Heavy>().hired = false;
         hire3.GetComponent<Support>().hired = false;
 
+        //generate death effect
         GameObject Blood = (GameObject)Instantiate(blood, transform.position, Quaternion.identity);
         blood.transform.parent = null;
         Destroy(gameObject);
     }
+    
+    //variables for air supports
 
     private Vector2 spawnPosition;
     private float playerDistance;
@@ -160,11 +178,13 @@ public class Captain : MonoBehaviour
 
     protected void airSupport()
     {
+        //random generate positions, similar to spawn system 
         spawnPosition.x = Random.Range(Camera.main.transform.position.x - 40.0f, Camera.main.transform.position.x + 40.0f);
         spawnPosition.y = Random.Range(Camera.main.transform.position.y - 40.0f, Camera.main.transform.position.y + 40.0f);
 
         playerDistance = Vector2.Distance(spawnPosition, playerTransform.position);
 
+        //re-generate if too close
         while (playerDistance <= 20.0f)
         {
             spawnPosition.x = Random.Range(Camera.main.transform.position.x - 40.0f, Camera.main.transform.position.x + 40.0f);
@@ -172,6 +192,7 @@ public class Captain : MonoBehaviour
             playerDistance = Vector2.Distance(spawnPosition, playerTransform.position);
         }
 
+        //air support will only be generated if none air supports exist on the battle field
         if (curAirSupport == 0)
         {
             GameObject Airplane1 = (GameObject)Instantiate(AirSupport, spawnPosition, Quaternion.identity);
@@ -184,6 +205,7 @@ public class Captain : MonoBehaviour
 
     protected void Hire()
     {
+        //hire enemies if they are exist, messages sent to let they know they are hired
         if (GameObject.FindWithTag("Sniper") != null)
         {
             hire1 = GameObject.FindWithTag("Sniper");
@@ -206,11 +228,14 @@ public class Captain : MonoBehaviour
         }
     }
 
+    //reset velocity after knockback
     public IEnumerator resetVelocity()
     {
         yield return new WaitForSeconds(0.1f);
         GetComponent<Rigidbody2D>().velocity = Vector2.zero;
     }
+
+    //damage flash
     public IEnumerator Flash()
     {
         sprite.color = Color.red;

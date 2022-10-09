@@ -55,7 +55,8 @@ public class Sniper : MonoBehaviour
         curState = State.follow;
         elapsedTime = 0.0f;
         score_worth = exp_worth * 2;
-        
+
+        //setup AI setting, locked rotation because this is a 2D game
         enemyAgent = GetComponent<UnityEngine.AI.NavMeshAgent>();
         enemyAgent.updateRotation = false;
         enemyAgent.updateUpAxis = false;
@@ -96,7 +97,8 @@ public class Sniper : MonoBehaviour
             case State.hired: UpdateHiredState(); break;
         }
 
-        if (hired == true)
+        //if enemy is hired he will go to hired state
+        if (hired == true && health > 0)
         {
             curState = State.hired;
         }
@@ -109,22 +111,29 @@ public class Sniper : MonoBehaviour
         }
     }
 
+
     protected void UpdateHiredState()
     {
         dist = Vector2.Distance(transform.position, battlePosition);
+
+        //enemy will only stay in his battle position after get hired
+
         enemyAgent.SetDestination(battlePosition);
         enemyAgent.stoppingDistance = 1.0f;
 
         if (dist >= 1.0f)
         {
+            //play idle animation when they are within the battle position
             animator.SetBool("IsAttack", false);
         }
         else
         {
+            //enemy will shoot bullets no matter har far players at
             animator.SetBool("IsAttack", true);
             SHOOTBULLET();
         }
 
+        //back to follow if captain dead
         if (hired == false)
         {
             curState = State.follow;
@@ -134,6 +143,8 @@ public class Sniper : MonoBehaviour
     protected void UpdateFollowState()
     {
         animator.SetBool("IsAttack", false);
+
+        //looking for suppport center if selected as target
 
         if (enchantLooking == true && enchanted == false)
         {
@@ -146,6 +157,8 @@ public class Sniper : MonoBehaviour
                 enchanted = true;
                 health += 50;
                 enemyAgent.speed = 5.0f;
+
+                //cute icons on indicate they are enchanted
                 sword.SetActive(true);
                 shield.SetActive(true);
             }
@@ -168,6 +181,7 @@ public class Sniper : MonoBehaviour
         dist = Vector2.Distance(transform.position, playerTransform.position);
         animator.SetBool("IsAttack", true);
        
+        //shoots enchanted bullets after enchant
         if (enchanted == false)
         {
             ShootBullet();
@@ -189,6 +203,7 @@ public class Sniper : MonoBehaviour
         SpawnManager.GetComponent<SpawnManager>().curEnemyNum -= 1;
         scoreManager.GetComponent<ScoreManager>().AddToScore(score_worth);
 
+        //de-attach blood effects from this enemy so it can finish playing after destory
         GameObject Blood = (GameObject)Instantiate(blood, transform.position, Quaternion.identity);
         blood.transform.parent = null;
         Destroy(gameObject);
@@ -232,18 +247,22 @@ public class Sniper : MonoBehaviour
             elapsedTime = 0.0f;
         }
     }
+    //flash green for heals
     public IEnumerator healFlash()
     {
         sprite.color = Color.green;
         yield return new WaitForSeconds(0.1f);
         sprite.color = Color.white;
     }
+
+    //reset velocity after knockback effects
     public IEnumerator resetVelocity()
     {
         yield return new WaitForSeconds(0.1f);
         GetComponent<Rigidbody2D>().velocity = Vector2.zero;
     }
 
+    //flash red for damages
     public IEnumerator Flash()
     {
         sprite.color = Color.red;

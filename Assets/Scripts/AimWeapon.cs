@@ -29,6 +29,7 @@ public class AimWeapon : MonoBehaviour
 
     private void Awake()
     {
+        //setup cursor, references upon awake
         aimTransform = transform.Find("Aim");
         Vector2 cursorPos = new Vector2(crosshair.width / 2, crosshair.height / 2);
         SetCursor(crosshair, cursorPos);
@@ -49,6 +50,7 @@ public class AimWeapon : MonoBehaviour
     {
         upgradeChosen = upgradeManager.GetComponent<UpgradeManager>().upgradeChosen;
         shootRate = player.GetComponent<PlayerController>().fireRate;
+
         if (!PauseMenu.gameIsPaused) {
             if(upgradeChosen) {
                 mouseP = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -59,6 +61,7 @@ public class AimWeapon : MonoBehaviour
         }
     }
 
+    //adjust gun spriterender so player will not have a gun that upside down 
     private void HandleAim()
     {
 
@@ -79,6 +82,7 @@ public class AimWeapon : MonoBehaviour
         aimTransform.localScale = localScale;
     }
     
+    //generate bullet with designed speed accoding to mouse position
     private void HandleShooting()
     {
         if (Input.GetButton("Fire1"))
@@ -95,12 +99,15 @@ public class AimWeapon : MonoBehaviour
                                     Quaternion.identity);
 
                 baseBullet.GetComponent<Rigidbody2D>().velocity = direction * bulletSpeed;
+                //send kockback direction to bullets script so they can apply kockback correctly to enemy
                 pBullet.GetComponent<PlayerBullet>().knockDirection = direction;
 
+                //shake screen 3 times upon shoot
                 carmera.SendMessage("shake");
                 carmera.SendMessage("shake");
                 carmera.SendMessage("shake");
 
+                //play gunshot sound
                 musicPlayer.clip = audios;
                 musicPlayer.Play();
             }

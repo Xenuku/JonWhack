@@ -4,16 +4,19 @@ using UnityEngine;
 
 public class Center : MonoBehaviour
 {
-    public int health = 200;
+
+    public int health;
     public SpriteRenderer sprite;
     private Transform center;
     private Transform target;
     private int targetType;
+    //Support center will have cooldown ready upon spawn
     private float timeElapsed = 10.0f;
 
     // Start is called before the first frame update
     void Start()
     {
+        //randomly pickup a enemytype for each spawn
         targetType = Random.Range(1, 5);
     }
 
@@ -21,8 +24,10 @@ public class Center : MonoBehaviour
     void Update()
     {
         timeElapsed += Time.deltaTime;
+        //only a target will be enchanted upon selection each 10s
         if (timeElapsed >= 10.0f && targetType == 1 && GameObject.FindWithTag("Melee") != null)
         {
+            //target's enchantlooking bool will be turn on and have coordinates of support center
             target = GameObject.FindWithTag("Melee").transform;
             target.GetComponent<MeleeEnemy>().enchantLooking = true;
             target.GetComponent<MeleeEnemy>().centerTransform = transform.position;
@@ -52,6 +57,7 @@ public class Center : MonoBehaviour
         }
     }
 
+    //flash upon damage
     public IEnumerator Flash()
     {
         sprite.color = Color.red;

@@ -145,7 +145,6 @@ MonoBehaviour:
   health: 50
   shootRate: 2
   attackRange: 10
-  attackRangeStop: 10
   exp_worth: 350
   score_worth: 0
   enchantLooking: 0
@@ -160,7 +159,7 @@ MonoBehaviour:
   sprite: {fileID: 1290239869833741344}
   sword: {fileID: 5443761208323000986}
   shield: {fileID: 5443761210094930158}
-  enhencedBullet: {fileID: 0}
+  enhencedBullet: {fileID: 8259603303253518586, guid: 2b0239b1d8f18454981aa24baba07542, type: 3}
   blood: {fileID: 8246018672008376782, guid: 649e46d3f2b9abf4da099c3311858ab4, type: 3}
 --- !u!95 &1285035838763832032
 Animator:

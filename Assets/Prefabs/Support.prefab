@@ -508,7 +508,7 @@ MonoBehaviour:
   enemyAgent: {fileID: 2325263074395349612}
   sprite: {fileID: 764708513411984386}
   bullet: {fileID: 8259603303253518586, guid: 299a59c7581eed71ea0961e7e308b8b9, type: 3}
-  enhencedBullet: {fileID: 0}
+  enhencedBullet: {fileID: 8259603303253518586, guid: 2b0239b1d8f18454981aa24baba07542, type: 3}
   bulletSpawnPoint: {fileID: 1724038712037845488}
   sword: {fileID: 8230942786567115627}
   shield: {fileID: 8228923712894256817}
